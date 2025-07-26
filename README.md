@@ -254,12 +254,8 @@ NEXT_PUBLIC_REFRESH_INTERVAL=30000
    - Verify Three.js dependencies
    - Check console for errors
 
-2. **API Data Not Loading**
-   - Verify network connectivity
-   - Check API rate limits
-   - Review console for error messages
 
-3. **Performance Issues**
+2. **Performance Issues**
    - Reduce refresh interval
    - Disable unnecessary features
    - Check device capabilities
@@ -267,17 +263,6 @@ NEXT_PUBLIC_REFRESH_INTERVAL=30000
 ### Debug Mode
 Enable debug mode by setting `NEXT_PUBLIC_DEV_MODE=true` in environment variables.
 
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## 🙏 Acknowledgments
 
@@ -293,6 +278,4 @@ For support and questions:
 - Check the documentation
 - Review the troubleshooting guide
 
----
 
-**Note**: This application is designed for educational and demonstration purposes. Real-world deployment may require additional security measures, API keys, and production optimizations.
