@@ -37,17 +37,15 @@ export default function Home() {
   // Mobile detection for responsive design
   const [isMobile, setIsMobile] = useState(false);
 
-  // Debug logging
-  console.log('🚀 Home component mounted');
+  // Debug logging removed for performance
 
   useEffect(() => {
     const checkMobile = () => {
       try {
         setIsMobile(window.innerWidth < 768);
-      } catch (error) {
-        console.warn('Failed to detect mobile device:', error);
-        setIsMobile(false);
-      }
+              } catch (error) {
+          setIsMobile(false);
+        }
     };
     
     checkMobile();
@@ -58,7 +56,6 @@ export default function Home() {
 
   // Performance monitoring setup
   useEffect(() => {
-    console.log('🔧 Setting up performance monitoring');
     try {
       performanceMonitor.startMonitoring();
       
@@ -66,14 +63,14 @@ export default function Home() {
         setShowPerformanceMonitor(true);
       }
     } catch (error) {
-      console.error('❌ Performance monitor error:', error);
+      // Silent error handling
     }
 
     return () => {
       try {
         performanceMonitor.stopMonitoring();
       } catch (error) {
-        console.error('❌ Performance monitor cleanup error:', error);
+        // Silent error handling
       }
     };
   }, []);
@@ -102,20 +99,8 @@ export default function Home() {
     toggleCache,
   } = useReduxLatency();
 
-  // Debug logging for Redux state
-  console.log('🔍 Redux State Debug:', {
-    dataLength: latencyData?.length || 0,
-    loading,
-    error,
-    isClient,
-    connectionStatus,
-    exchangeCount,
-    averageLatency
-  });
-
   // Generate test data immediately on mount
   useEffect(() => {
-    console.log('🧪 Generating test data on mount...');
     if (isClient) {
       dispatch(generateTestData());
     }
@@ -131,7 +116,6 @@ export default function Home() {
   
   // Handle data source toggle
   const handleDataSourceToggle = () => {
-    console.log('🔄 Toggling data source');
     const newUseRealMeasurement = !useRealMeasurement;
     setUseRealMeasurement(newUseRealMeasurement);
     if (fetchData) {
@@ -162,8 +146,6 @@ export default function Home() {
       </div>
     );
   }
-
-  console.log('🎉 Rendering full UI');
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
@@ -208,11 +190,10 @@ export default function Home() {
               </button>
               
               {/* Test Data Button */}
-              <button
-                onClick={() => {
-                  console.log('🧪 Manual test data generation triggered');
-                  dispatch(generateTestData());
-                }}
+                              <button
+                  onClick={() => {
+                    dispatch(generateTestData());
+                  }}
                 className="px-3 py-1 text-sm bg-green-100 dark:bg-green-700 text-green-700 dark:text-green-300 rounded-lg hover:bg-green-200 dark:hover:bg-green-600 transition-colors"
               >
                 Generate Test Data

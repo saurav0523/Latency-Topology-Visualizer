@@ -65,16 +65,7 @@ export const useReduxLatency = () => {
   const averageLatency = useAppSelector(selectAverageLatency);
   const exchangeCount = useAppSelector(selectExchangeCount);
 
-  // Debug logging
-  console.log('🔍 Redux State:', {
-    dataLength: data?.length || 0,
-    loading,
-    error,
-    isClient,
-    connectionStatus,
-    exchangeCount,
-    averageLatency
-  });
+  // Debug logging removed for performance
 
   // Set client flag on mount
   useEffect(() => {
@@ -83,14 +74,12 @@ export const useReduxLatency = () => {
 
   // Fetch data function
   const fetchData = useCallback(async (useRealMeasurement: boolean = false) => {
-    console.log('🔄 fetchData function called');
     try {
       dispatch(setConnectionStatus('connecting'));
       dispatch(setError(null)); // Clear any previous errors
       const startTime = Date.now();
       
       // Use the proper Redux async thunk
-      console.log('🔄 Dispatching fetchLatencyData...');
       await dispatch(fetchLatencyData()).unwrap();
       
       const responseTime = Date.now() - startTime;
@@ -105,10 +94,7 @@ export const useReduxLatency = () => {
       dispatch(setLastUpdated(new Date().toISOString()));
       dispatch(setApiTokenValid(true));
       
-      console.log(`✅ Data fetched successfully (${useRealMeasurement ? 'Real APIs' : 'Enhanced Sim'})`);
-      
     } catch (error) {
-      console.error('❌ Data fetch error in hook:', error);
       
       dispatch(setConnectionStatus('error'));
       dispatch(updateEndpointStats({
@@ -139,8 +125,6 @@ export const useReduxLatency = () => {
       }));
       
     } catch (error) {
-      console.error('❌ Historical data fetch error:', error);
-      
       dispatch(updateEndpointStats({
         endpoint: 'historical-data',
         success: false,

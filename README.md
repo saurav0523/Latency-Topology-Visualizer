@@ -58,32 +58,32 @@ A real-time exchange performance monitoring dashboard built with Next.js, React,
 ##  Quick Start
 
 ### 1. Clone the Repository
-```bash
-git clone <repository-url>
-cd latency-visualizer
-```
+   ```bash
+   git clone <repository-url>
+   cd latency-visualizer
+   ```
 
 ### 2. Install Dependencies
-```bash
-npm install
-```
+   ```bash
+   npm install
+   ```
 
 ### 3. Environment Setup
-Create a `.env.local` file in the root directory:
-```env
+   Create a `.env.local` file in the root directory:
+   ```env
 # Optional: Cloudflare API Configuration
 NEXT_PUBLIC_CLOUDFLARE_API_TOKEN=your_api_token_here
 NEXT_PUBLIC_CLOUDFLARE_ZONE_ID=your_zone_id_here
 
 # Development Settings
-NEXT_PUBLIC_DEV_MODE=true
+   NEXT_PUBLIC_DEV_MODE=true
 NEXT_PUBLIC_ENABLE_PERFORMANCE_MONITORING=true
 ```
 
 ### 4. Start Development Server
-```bash
-npm run dev
-```
+   ```bash
+   npm run dev
+   ```
 
 Open [http://localhost:3000](http://localhost:3000) to view the application.
 
