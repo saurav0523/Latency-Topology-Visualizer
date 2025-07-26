@@ -1,281 +1,217 @@
 # Latency Topology Visualizer
 
-A Next.js application that displays a 3D world map visualizing exchange server locations and real-time/historical latency data across AWS, GCP, and Azure co-location regions for cryptocurrency trading infrastructure.
+A real-time exchange performance monitoring dashboard built with Next.js, React, TypeScript, and Three.js for visualizing global latency data across cryptocurrency exchanges.
 
-## 🚀 Features
+##  Features
 
-### 3D World Map Display
-- Interactive 3D world map with smooth camera controls
-- Real-time exchange server locations as 3D markers
-- Rotate, zoom, and pan functionality
-- Smooth camera transitions and animations
+### Core Functionality
+- **Real-time Latency Monitoring**: Live tracking of exchange response times
+- **Global 3D/2D Map Visualization**: Interactive globe showing exchange locations with latency indicators
+- **Performance Analytics**: Historical trends and statistical analysis
+- **Multi-Cloud Support**: AWS, GCP, Azure, and Alibaba Cloud integration
+- **Auto-refresh System**: Configurable data refresh intervals
+- **Caching Mechanism**: Intelligent API response caching for performance
+- **Export Capabilities**: CSV, JSON, and PDF data export
 
-### Exchange Server Locations
-- Major cryptocurrency exchange server locations (Binance, OKX, Coinbase, Kraken, Bybit, Deribit, etc.)
-- Server information on hover/click (exchange name, location, cloud provider)
-- Visual markers with different colors for AWS, GCP, and Azure hosted servers
-- Interactive legend explaining marker types and colors
+### Enhanced Controls for GoQuant Requirements
+- **Advanced Filtering**: Search by exchange name, cloud provider, and latency range
+- **Real-time/Historical Toggle**: Switch between live and historical data views
+- **Region Visualization**: Show/hide cloud regions and exchange clusters
+- **Performance Monitoring**: Built-in performance metrics and monitoring
+- **Responsive Design**: Mobile-optimized interface
+- **Theme Support**: Light/dark mode toggle
 
-### Real-time Latency Visualization
-- Animated latency connections between exchange servers and cloud regions
-- Real-time latency values with animated data streams and pulse effects
-- Color-coded connections (green for low, yellow for medium, red for high latency)
-- Automatic data updates every 5-10 seconds
+### Technical Features
+- **Skeleton Loading**: Smooth loading states with skeleton components
+- **Error Handling**: Comprehensive error states and recovery
+- **Type Safety**: Full TypeScript implementation
+- **State Management**: Redux Toolkit with optimized selectors
+- **API Integration**: Cloudflare Radar API with fallback simulation
+- **3D Graphics**: React Three Fiber for immersive visualizations
 
-### Historical Latency Trends
-- Time-series charts showing historical latency data for selected server pairs
-- Multiple chart types: Line, Bar, and Area charts
-- Latency statistics (min, max, average) for selected time periods
-- Time range selectors (1 hour, 24 hours, 7 days, 30 days)
+##  Tech Stack
 
-### Cloud Provider Regions
-- AWS, GCP, and Azure co-location regions visualization
-- Region boundaries and clusters with distinct visual styling
-- Region information including provider name, region code, and server count
-- Filtering options to show/hide specific cloud providers
-
-### Interactive Controls
-- Advanced control panel for filtering by exchange, cloud provider, or latency range
-- Search functionality to quickly locate specific exchanges or regions
-- Toggle switches for different visualization layers (real-time, historical, regions)
-- Performance metrics dashboard showing current system status
-
-### Responsive Design
-- Fully responsive and user-friendly across various screen sizes
-- Optimized 3D rendering performance for mobile devices
-- Touch controls for mobile interaction with the 3D map
-
-### Bonus Features
-- Dark/light theme toggle for better user experience
-- Export functionality for latency reports and visualizations (JSON, CSV, PDF)
-- Performance monitoring and optimization
-- Real-time API health monitoring
-- Rate limiting and caching mechanisms
-
-## 🛠️ Technology Stack
-
-- **Framework**: Next.js 15.4.2 with TypeScript
-- **3D Graphics**: Three.js with React Three Fiber
-- **State Management**: Redux Toolkit
+- **Frontend**: Next.js 14, React 18, TypeScript
+- **Styling**: Tailwind CSS, PostCSS
+- **3D Graphics**: React Three Fiber, Three.js
 - **Charts**: Recharts
-- **Styling**: Tailwind CSS
+- **State Management**: Redux Toolkit
 - **HTTP Client**: Axios
-- **Animations**: Framer Motion
-- **Icons**: Lucide React
-- **Notifications**: React Hot Toast
+- **Build Tool**: Next.js (Webpack)
+- **Linting**: ESLint
+- **Package Manager**: npm
 
-## 📦 Installation
+##  Requirements
 
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd latency-visualizer
-   ```
+### System Requirements
+- Node.js 18+ 
+- npm 9+ or yarn
+- Modern browser with WebGL support
+- Minimum 4GB RAM
+- Stable internet connection
 
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
 
-3. **Set up environment variables** (optional)
-   Create a `.env.local` file in the root directory:
-   ```env
-   # API Configuration
-   NEXT_PUBLIC_CLOUDFLARE_API_URL=https://api.cloudflare.com/client/v4
-   NEXT_PUBLIC_PINGDOM_API_URL=https://api.pingdom.com/api/3.1
-   NEXT_PUBLIC_FREE_APIS_BASE_URL=https://api.publicapis.org
+### API Requirements
+- Cloudflare Radar API access (optional - falls back to simulation)
+- API token for real data (optional)
 
-   # Development Configuration
-   NEXT_PUBLIC_DEV_MODE=true
-   NEXT_PUBLIC_ENABLE_MOCK_DATA=true
+##  Quick Start
 
-   # Performance Configuration
-   NEXT_PUBLIC_REFRESH_INTERVAL=5000
-   NEXT_PUBLIC_MAX_RETRIES=3
-   NEXT_PUBLIC_TIMEOUT=10000
+### 1. Clone the Repository
+```bash
+git clone <repository-url>
+cd latency-visualizer
+```
 
-   # 3D Map Configuration
-   NEXT_PUBLIC_MAP_QUALITY=high
-   NEXT_PUBLIC_ENABLE_WEBGL=true
-   ```
+### 2. Install Dependencies
+```bash
+npm install
+```
 
-4. **Run the development server**
-   ```bash
-   npm run dev
-   ```
+### 3. Environment Setup
+Create a `.env.local` file in the root directory:
+```env
+# Optional: Cloudflare API Configuration
+NEXT_PUBLIC_CLOUDFLARE_API_TOKEN=your_api_token_here
+NEXT_PUBLIC_CLOUDFLARE_ZONE_ID=your_zone_id_here
 
-5. **Open your browser**
-   Navigate to [http://localhost:3000](http://localhost:3000)
+# Development Settings
+NEXT_PUBLIC_DEV_MODE=true
+NEXT_PUBLIC_ENABLE_PERFORMANCE_MONITORING=true
+```
 
-## 🏗️ Project Structure
+### 4. Start Development Server
+```bash
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) to view the application.
+
+##  Project Structure
 
 ```
 latency-visualizer/
 ├── src/
-│   ├── app/                    # Next.js App Router
+│   ├── app/                    # Next.js app directory
 │   │   ├── api/               # API routes
-│   │   │   ├── cloudflare/    # Cloudflare API proxy
-│   │   │   └── pingdom/       # Pingdom API proxy
 │   │   ├── globals.css        # Global styles
 │   │   ├── layout.tsx         # Root layout
-│   │   ├── page.tsx           # Main page
-│   │   └── providers.tsx      # Redux provider
+│   │   └── page.tsx           # Main page
 │   ├── components/            # React components
-│   │   ├── ControlsPanel.tsx  # Control panel
-│   │   ├── ExportPanel.tsx    # Export functionality
-│   │   ├── LatencyChart.tsx   # Charts component
-│   │   ├── Map.tsx            # 3D map component
+│   │   ├── Map.tsx           # 3D/2D map visualization
+│   │   ├── LatencyChart.tsx  # Chart components
+│   │   ├── ControlsPanel.tsx # Control interface
+│   │   ├── ExportPanel.tsx   # Data export
 │   │   ├── SkeletonLoader.tsx # Loading states
-│   │   └── ThemeToggle.tsx    # Theme switcher
-│   ├── hooks/                 # Custom hooks
-│   │   ├── useLatencyHistory.ts
-│   │   └── useReduxLatency.ts
-│   ├── lib/                   # Utility libraries
-│   │   ├── api/              # API services
-│   │   │   ├── axios-instance.ts
-│   │   │   ├── cloudflare-service.ts
-│   │   │   ├── endpoints.ts
-│   │   │   ├── free-apis-service.ts
-│   │   │   ├── health-monitor.ts
-│   │   │   ├── performance-monitor.ts
-│   │   │   └── rate-limiter.ts
-│   │   └── constants.ts       # Application constants
-│   ├── store/                 # Redux store
-│   │   ├── slices/           # Redux slices
-│   │   │   ├── apiSlice.ts
-│   │   │   ├── latencySlice.ts
-│   │   │   └── uiSlice.ts
-│   │   ├── hooks.ts          # Redux hooks
-│   │   └── index.ts          # Store configuration
-│   └── types/                 # TypeScript types
-│       └── latency.ts
-├── public/                    # Static assets
-├── package.json
-├── next.config.ts
-├── tsconfig.json
-└── README.md
+│   │   └── ThemeToggle.tsx   # Theme switcher
+│   ├── hooks/                # Custom React hooks
+│   │   ├── useReduxLatency.ts # Redux integration
+│   │   └── useLatencyHistory.ts # Historical data
+│   ├── lib/                  # Utility libraries
+│   │   ├── api/             # API services
+│   │   ├── constants.ts     # App constants
+│   │   └── types/           # TypeScript types
+│   ├── store/               # Redux store
+│   │   ├── slices/          # Redux slices
+│   │   ├── hooks.ts         # Redux hooks
+│   │   └── index.ts         # Store configuration
+│   └── types/               # TypeScript definitions
+├── public/                  # Static assets
+├── next.config.ts          # Next.js configuration
+├── tailwind.config.js      # Tailwind CSS configuration
+├── tsconfig.json           # TypeScript configuration
+└── package.json            # Dependencies and scripts
 ```
 
-## 🎯 Key Components
-
-### 3D Map Component (`src/components/Map.tsx`)
-- Interactive 3D world visualization using Three.js
-- Exchange markers with real-time latency data
-- Animated connections between exchanges
-- Cloud provider region visualization
-
-### Latency Chart Component (`src/components/LatencyChart.tsx`)
-- Time-series charts using Recharts
-- Multiple chart types (Line, Bar, Area)
-- Real-time data updates
-- Interactive tooltips and legends
-
-### Controls Panel (`src/components/ControlsPanel.tsx`)
-- Advanced filtering and search functionality
-- Cloud provider selection
-- Latency range controls
-- Visualization layer toggles
-
-### Redux Store (`src/store/`)
-- Centralized state management
-- Real-time data synchronization
-- API health monitoring
-- Performance metrics tracking
-
-## 🔧 Configuration
-
-### API Configuration
-The application supports multiple data sources:
-- **Cloudflare Radar API**: Real-time network performance data
-- **Free Public APIs**: Fallback data sources for latency measurement
-- **Simulated Data**: Generated data for demonstration purposes
+##  Configuration
 
 ### Performance Settings
-- **Refresh Interval**: Configurable data update frequency (default: 10 seconds)
-- **Cache Duration**: API response caching (default: 30 seconds)
-- **Rate Limiting**: Request throttling to prevent API abuse
-- **WebGL Optimization**: 3D rendering performance settings
+The application automatically detects device capabilities and adjusts performance:
+- **Low-end devices**: Reduced 3D complexity, fewer animations
+- **High-end devices**: Full 3D features, smooth animations
+- **Mobile devices**: Optimized touch controls, simplified UI
 
-## 🚀 Deployment
+### Caching Configuration
+- **Default TTL**: 30 seconds for API responses
+- **Cache Size**: Unlimited (in-memory)
+- **Auto-refresh**: Configurable intervals (5s - 60s)
 
-### Build for Production
-```bash
-npm run build
-npm start
-```
+### API Configuration
+- **Real API**: Cloudflare Radar endpoints
+- **Simulation**: Fallback data generation
+- **Rate Limiting**: Built-in request throttling
+- **Error Handling**: Graceful degradation
 
-### Environment Variables for Production
-```env
-NEXT_PUBLIC_DEV_MODE=false
-NEXT_PUBLIC_ENABLE_MOCK_DATA=false
-NEXT_PUBLIC_REFRESH_INTERVAL=30000
-```
+##  Data Sources
 
-## 📊 Data Sources
+### Primary Sources
+1. **Cloudflare Radar API**: Real latency data from global network
+2. **Simulated Data**: Generated test data for development
+3. **Historical Data**: Time-series data for trend analysis
 
-### Real-time Latency Data
-- Cloudflare Radar API for global network performance
-- Exchange-specific API endpoints
-- Public monitoring services
+### Supported Exchanges
+- Binance, Coinbase, Kraken, Bitfinex
+- OKX, KuCoin, Bybit, Gate.io
+- And more via API integration
 
-### Exchange Information
-- Major cryptocurrency exchanges (Binance, OKX, Coinbase, etc.)
-- Geographic locations and cloud provider information
-- Historical performance data
+### Cloud Providers
+- Amazon Web Services (AWS)
+- Google Cloud Platform (GCP)
+- Microsoft Azure
+- Alibaba Cloud
 
-### Cloud Provider Regions
-- AWS Global Infrastructure
-- Google Cloud Platform regions
-- Microsoft Azure regions
+##  Key Features Explained
 
-## 🎨 Customization
+### Global Latency Map
+- **3D Globe**: Interactive Earth visualization with exchange markers
+- **2D View**: Traditional map view for performance
+- **Latency Colors**: Visual indicators based on response times
+- **Exchange Clustering**: Grouped by cloud regions
 
-### Styling
-- Tailwind CSS for responsive design
-- Dark/light theme support
-- Custom animations and transitions
+### Latency Trends Chart
+- **Multiple Chart Types**: Line, bar, and area charts
+- **Real-time Updates**: Live data streaming
+- **Historical Analysis**: Time-range selection
+- **Statistical Summary**: Min, max, average calculations
 
-### 3D Visualization
-- Customizable marker styles and colors
-- Adjustable camera controls
-- Performance optimization settings
+### Controls Panel
+- **Data Source Toggle**: Real vs simulated data
+- **Filter Controls**: Search and range filtering
+- **View Options**: 2D/3D map switching
+- **Export Settings**: Data export configuration
 
-### Charts
-- Multiple chart types and configurations
-- Custom color schemes
-- Interactive features
-
-## 🔍 Troubleshooting
-
-### Common Issues
-
-1. **3D Map Not Loading**
-   - Check WebGL support in browser
-   - Verify Three.js dependencies
-   - Check console for errors
+### Performance Monitor
+- **FPS Tracking**: Real-time frame rate monitoring
+- **Memory Usage**: RAM consumption tracking
+- **Render Times**: Component rendering performance
+- **Network Stats**: API response times
 
 
-2. **Performance Issues**
-   - Reduce refresh interval
-   - Disable unnecessary features
-   - Check device capabilities
 
-### Debug Mode
-Enable debug mode by setting `NEXT_PUBLIC_DEV_MODE=true` in environment variables.
+##  Troubleshooting
 
 
-## 🙏 Acknowledgments
+#### Build Issues
+- **TypeScript errors**: Run `npm run type-check`
+- **Linting errors**: Run `npm run lint`
+- **Missing dependencies**: Run `npm install`
 
-- Three.js community for 3D graphics library
-- Cloudflare for network performance data
-- Recharts for charting library
-- Next.js team for the framework
+
+##  Acknowledgments
+
+- **Cloudflare Radar**: For providing global network data
+- **React Three Fiber**: For 3D visualization capabilities
+- **Recharts**: For chart components
+- **Tailwind CSS**: For utility-first styling
 
 ## 📞 Support
 
 For support and questions:
-- Create an issue in the repository
-- Check the documentation
-- Review the troubleshooting guide
+- Email: gsaurav641@gmail.com
+
+---
+
+
+
 
 

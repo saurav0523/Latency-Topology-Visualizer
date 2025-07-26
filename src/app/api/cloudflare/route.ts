@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
     if (endpoint === 'verify') {
       // Only verify the token - this endpoint definitely exists
       const url = 'https://api.cloudflare.com/client/v4/user/tokens/verify';
-      console.log(`🚀 Proxying token verification to: ${url}`);
+      console.log(` Proxying token verification to: ${url}`);
 
       const response = await fetch(url, {
         method: 'GET',
@@ -24,14 +24,14 @@ export async function GET(request: NextRequest) {
       });
 
       if (!response.ok) {
-        console.error(`❌ Token verification failed: ${response.status} ${response.statusText}`);
+        console.error(` Token verification failed: ${response.status} ${response.statusText}`);
         
         // Log the response body for debugging
         try {
           const errorData = await response.text();
-          console.error('❌ Error Response Body:', errorData);
+          console.error(' Error Response Body:', errorData);
         } catch {
-          console.error('❌ Could not read error response body');
+          console.error(' Could not read error response body');
         }
         
         return NextResponse.json(
@@ -41,22 +41,22 @@ export async function GET(request: NextRequest) {
       }
 
       const data = await response.json();
-      console.log(`✅ Token verification successful: ${response.status}`);
+      console.log(` Token verification successful: ${response.status}`);
       return NextResponse.json(data);
     } else if (endpoint === 'latency') {
       // Enhanced latency endpoint with multiple data sources
-      console.log(`🔍 Fetching latency data (real measurement: ${useRealMeasurement})`);
+      console.log(` Fetching latency data (real measurement: ${useRealMeasurement})`);
       
       try {
         let latencyData;
         
         if (useRealMeasurement) {
           // Try real measurement first
-          console.log('🚀 Attempting real latency measurement...');
+          console.log(' Attempting real latency measurement...');
           latencyData = await cloudflareApiService.getLatencyData(true);
         } else {
           // Use enhanced simulation
-          console.log('🎭 Using enhanced simulated data...');
+          console.log(' Using enhanced simulated data...');
           latencyData = await cloudflareApiService.getLatencyData(false);
         }
         
@@ -66,7 +66,7 @@ export async function GET(request: NextRequest) {
           source: useRealMeasurement ? 'real-measurement' : 'enhanced-simulation'
         });
       } catch (error) {
-        console.warn('⚠️ Latency data fetch failed, using fallback:', error);
+        console.warn(' Latency data fetch failed, using fallback:', error);
         
         // Fallback to basic simulation
         const fallbackData = cloudflareApiService.generateSimulatedLatencyData();
@@ -91,7 +91,7 @@ export async function GET(request: NextRequest) {
       }
     } else if (endpoint === 'free-apis') {
       // New endpoint for free API latency measurements
-      console.log('🌐 Measuring latency to free public APIs...');
+      console.log(' Measuring latency to free public APIs...');
       
       try {
         const freeApiResults = await freeApisService.measureFreeApiLatency();
@@ -107,7 +107,7 @@ export async function GET(request: NextRequest) {
           source: 'free-apis'
         });
       } catch (error) {
-        console.error('❌ Free API measurement failed:', error);
+        console.error(' Free API measurement failed:', error);
         return NextResponse.json(
           { error: 'Free API measurement failed' },
           { status: 500 }
@@ -115,7 +115,7 @@ export async function GET(request: NextRequest) {
       }
     } else if (endpoint === 'speed-test') {
       // Internet speed test data
-      console.log('⚡ Generating internet speed test data...');
+      console.log(' Generating internet speed test data...');
       
       try {
         const speedData = await freeApisService.getInternetSpeedData();
@@ -131,7 +131,7 @@ export async function GET(request: NextRequest) {
           source: 'speed-test'
         });
       } catch (error) {
-        console.error('❌ Speed test data generation failed:', error);
+        console.error(' Speed test data generation failed:', error);
         return NextResponse.json(
           { error: 'Speed test data generation failed' },
           { status: 500 }
@@ -139,7 +139,7 @@ export async function GET(request: NextRequest) {
       }
     } else {
       // For other endpoints, return enhanced simulated data
-      console.log(`⚠️ Endpoint '${endpoint}' not implemented - returning enhanced simulated data`);
+      console.log(` Endpoint '${endpoint}' not implemented - returning enhanced simulated data`);
       
       const simulatedData = {
         success: true,
@@ -160,7 +160,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(simulatedData);
     }
   } catch (error) {
-    console.error('❌ Proxy Error:', error);
+    console.error(' Proxy Error:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
