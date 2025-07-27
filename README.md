@@ -85,7 +85,7 @@ NEXT_PUBLIC_ENABLE_PERFORMANCE_MONITORING=true
    npm run dev
    ```
 
-Open [http://localhost:3000](http://localhost:3000) to view the application.
+Open [https://glistening-bubblegum-74139f.netlify.app/](https://glistening-bubblegum-74139f.netlify.app/) to view the application.
 
 ##  Project Structure
 
