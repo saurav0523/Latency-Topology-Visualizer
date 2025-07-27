@@ -1,19 +1,18 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { createSelector } from '@reduxjs/toolkit';
 
-// Types
 export interface APIState {
   connectionStatus: 'connected' | 'disconnected' | 'connecting' | 'error';
-  lastApiCall: string | null; // Changed from Date to string
+  lastApiCall: string | null; 
   apiCallsCount: number;
   rateLimitRemaining: number | null;
-  rateLimitReset: string | null; // Changed from Date to string
+  rateLimitReset: string | null; 
   apiToken: string | null;
   apiTokenValid: boolean;
-  lastTokenCheck: string | null; // Changed from Date to string
+  lastTokenCheck: string | null; 
   endpoints: {
     [key: string]: {
-      lastCall: string | null; // Changed from Date to string
+      lastCall: string | null; 
       successCount: number;
       errorCount: number;
       averageResponseTime: number;
@@ -22,13 +21,13 @@ export interface APIState {
   cache: {
     [key: string]: {
       data: Record<string, unknown>;
-      timestamp: string; // Changed from Date to string
+      timestamp: string; 
       ttl: number;
     };
   };
 }
 
-// Initial state
+
 const initialState: APIState = {
   connectionStatus: 'disconnected',
   lastApiCall: null,
@@ -61,7 +60,7 @@ const initialState: APIState = {
   cache: {},
 };
 
-// Slice
+
 const apiSlice = createSlice({
   name: 'api',
   initialState,
@@ -82,7 +81,7 @@ const apiSlice = createSlice({
     },
     setApiTokenValid: (state, action: PayloadAction<boolean>) => {
       state.apiTokenValid = action.payload;
-      state.lastTokenCheck = new Date().toISOString(); // Convert to ISO string
+      state.lastTokenCheck = new Date().toISOString(); 
     },
     updateEndpointStats: (state, action: PayloadAction<{
       endpoint: string;
@@ -100,15 +99,14 @@ const apiSlice = createSlice({
       }
       
       const endpointStats = state.endpoints[endpoint];
-      endpointStats.lastCall = new Date().toISOString(); // Convert to ISO string
-      
+      endpointStats.lastCall = new Date().toISOString();
+
       if (success) {
         endpointStats.successCount += 1;
       } else {
         endpointStats.errorCount += 1;
       }
       
-      // Update average response time
       const totalCalls = endpointStats.successCount + endpointStats.errorCount;
       if (totalCalls > 0) {
         endpointStats.averageResponseTime = 
@@ -123,7 +121,7 @@ const apiSlice = createSlice({
       const { key, data, ttl } = action.payload;
       state.cache[key] = {
         data,
-        timestamp: new Date().toISOString(), // Convert to ISO string
+        timestamp: new Date().toISOString(),
         ttl,
       };
     },
@@ -172,7 +170,7 @@ export const {
 
 export default apiSlice.reducer;
 
-// Selectors
+
 export const selectConnectionStatus = (state: { api: APIState }) => state.api.connectionStatus;
 export const selectLastApiCall = (state: { api: APIState }) => state.api.lastApiCall;
 export const selectApiCallsCount = (state: { api: APIState }) => state.api.apiCallsCount;
@@ -184,7 +182,7 @@ export const selectLastTokenCheck = (state: { api: APIState }) => state.api.last
 export const selectEndpoints = (state: { api: APIState }) => state.api.endpoints;
 export const selectCache = (state: { api: APIState }) => state.api.cache;
 
-// Computed selectors
+
 export const selectApiHealth = createSelector(
   [selectEndpoints],
   (endpoints) => {

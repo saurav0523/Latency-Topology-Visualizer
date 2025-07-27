@@ -11,7 +11,6 @@ export async function GET(request: NextRequest) {
     const useRealMeasurement = searchParams.get('real') === 'true';
     
     if (endpoint === 'verify') {
-      // Only verify the token - this endpoint definitely exists
       const url = 'https://api.cloudflare.com/client/v4/user/tokens/verify';
       console.log(` Proxying token verification to: ${url}`);
 
@@ -25,8 +24,6 @@ export async function GET(request: NextRequest) {
 
       if (!response.ok) {
         console.error(` Token verification failed: ${response.status} ${response.statusText}`);
-        
-        // Log the response body for debugging
         try {
           const errorData = await response.text();
           console.error(' Error Response Body:', errorData);
@@ -44,18 +41,15 @@ export async function GET(request: NextRequest) {
       console.log(` Token verification successful: ${response.status}`);
       return NextResponse.json(data);
     } else if (endpoint === 'latency') {
-      // Enhanced latency endpoint with multiple data sources
       console.log(` Fetching latency data (real measurement: ${useRealMeasurement})`);
       
       try {
         let latencyData;
         
         if (useRealMeasurement) {
-          // Try real measurement first
           console.log(' Attempting real latency measurement...');
           latencyData = await cloudflareApiService.getLatencyData(true);
         } else {
-          // Use enhanced simulation
           console.log(' Using enhanced simulated data...');
           latencyData = await cloudflareApiService.getLatencyData(false);
         }
@@ -68,7 +62,6 @@ export async function GET(request: NextRequest) {
       } catch (error) {
         console.warn(' Latency data fetch failed, using fallback:', error);
         
-        // Fallback to basic simulation
         const fallbackData = cloudflareApiService.generateSimulatedLatencyData();
         return NextResponse.json({
           success: true,
@@ -90,7 +83,6 @@ export async function GET(request: NextRequest) {
         });
       }
     } else if (endpoint === 'free-apis') {
-      // New endpoint for free API latency measurements
       console.log(' Measuring latency to free public APIs...');
       
       try {
@@ -114,7 +106,6 @@ export async function GET(request: NextRequest) {
         );
       }
     } else if (endpoint === 'speed-test') {
-      // Internet speed test data
       console.log(' Generating internet speed test data...');
       
       try {
@@ -138,7 +129,6 @@ export async function GET(request: NextRequest) {
         );
       }
     } else {
-      // For other endpoints, return enhanced simulated data
       console.log(` Endpoint '${endpoint}' not implemented - returning enhanced simulated data`);
       
       const simulatedData = {

@@ -1,14 +1,15 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { createSlice, createAsyncThunk, createSelector, PayloadAction } from '@reduxjs/toolkit';
 import { cloudflareApiService, LatencyData } from '../../lib/api/cloudflare-service';
 import { LATENCY_THRESHOLDS } from '../../lib/constants';
 
-// Types
+
 export interface LatencyState {
   data: LatencyData[];
   historicalData: { [exchange: string]: { time: string; latency: number }[] };
   loading: boolean;
   error: string | null;
-  lastUpdated: string | null; // Changed from Date to string
+  lastUpdated: string | null;
   selectedExchange: string | null;
   timeRange: '1h' | '24h' | '7d' | '30d';
   refreshInterval: number;
@@ -16,10 +17,9 @@ export interface LatencyState {
   autoRefresh: boolean;
 }
 
-// Initial state
+
 const initialState: LatencyState = {
   data: [
-    // Add comprehensive initial test data to prevent skeleton loading
     {
       exchange: "Binance",
       location: { lat: 1.3521, lng: 103.8198 },
@@ -86,77 +86,74 @@ const initialState: LatencyState = {
     }
   ],
   historicalData: {},
-  loading: false, // Always start with false to show UI immediately
+  loading: false, 
   error: null,
   lastUpdated: new Date().toISOString(),
   selectedExchange: null,
   timeRange: '24h',
-  refreshInterval: 10000, // 10 seconds
+  refreshInterval: 10000,
   cacheEnabled: true,
   autoRefresh: true,
 };
 
-// Async thunks
+
 export const fetchLatencyData = createAsyncThunk(
   'latency/fetchData',
   async (_, { rejectWithValue, getState }) => {
     try {
       console.log('🔄 fetchLatencyData async thunk started');
       
-      // Check if we have recent data and cache is enabled
+
       const state = getState() as { latency: LatencyState };
       if (state.latency.cacheEnabled && state.latency.data && state.latency.data.length > 0) {
         const lastUpdate = state.latency.lastUpdated ? new Date(state.latency.lastUpdated).getTime() : 0;
         const now = Date.now();
         const timeSinceLastUpdate = now - lastUpdate;
         
-        // If data is less than 30 seconds old, return existing data without loading state
         if (timeSinceLastUpdate < 30000) {
-          console.log('⏭️ Returning cached data - no loading state needed');
+          console.log(' Returning cached data - no loading state needed');
           return state.latency.data;
         }
       }
       
-      // Verify token first
+
       try {
         await cloudflareApiService.verifyToken();
-        console.log('✅ Token verification successful');
+        console.log(' Token verification successful');
       } catch (error) {
-        console.log('⚠️ Token verification failed, using simulated data');
+        console.log(' Token verification failed, using simulated data');
         const simulatedData = cloudflareApiService.generateSimulatedLatencyData();
-        console.log('✅ Generated simulated data:', simulatedData.length, 'items');
+        console.log(' Generated simulated data:', simulatedData.length, 'items');
         return simulatedData;
       }
 
-      // Fetch real data
       try {
         const radarData = await cloudflareApiService.getLatencyData();
-        console.log('✅ API data fetched successfully');
+        console.log(' API data fetched successfully');
         return cloudflareApiService.transformToLatencyData();
       } catch (error) {
-        console.log('⚠️ API fetch failed, using simulated data');
+        console.log(' API fetch failed, using simulated data');
         const simulatedData = cloudflareApiService.generateSimulatedLatencyData();
-        console.log('✅ Generated simulated data:', simulatedData.length, 'items');
+        console.log(' Generated simulated data:', simulatedData.length, 'items');
         return simulatedData;
       }
     } catch (error) {
-      console.error('❌ Data fetch error:', error);
+      console.error(' Data fetch error:', error);
       return rejectWithValue(error instanceof Error ? error.message : 'Failed to fetch data');
     }
   }
 );
 
-// Test action to generate data immediately
 export const generateTestData = createAsyncThunk(
   'latency/generateTestData',
   async (_, { rejectWithValue }) => {
     try {
-      console.log('🧪 Generating test data...');
+      console.log('Generating test data...');
       const testData = cloudflareApiService.generateSimulatedLatencyData();
-      console.log('✅ Test data generated:', testData.length, 'items');
+      console.log('Test data generated:', testData.length, 'items');
       return testData;
     } catch (error) {
-      console.error('❌ Test data generation error:', error);
+      console.error('Test data generation error:', error);
       return rejectWithValue(error instanceof Error ? error.message : 'Failed to generate test data');
     }
   }
@@ -166,7 +163,6 @@ export const fetchHistoricalData = createAsyncThunk(
   'latency/fetchHistoricalData',
   async ({ exchange, timeRange }: { exchange: string; timeRange: '1h' | '24h' | '7d' | '30d' }, { rejectWithValue }) => {
     try {
-      // Generate historical data (in real app, this would come from API)
       const now = Date.now();
       const dataPoints = timeRange === '1h' ? 60 : 
                         timeRange === '24h' ? 1440 : 
@@ -197,7 +193,7 @@ export const fetchHistoricalData = createAsyncThunk(
   }
 );
 
-// Slice
+
 const latencySlice = createSlice({
   name: 'latency',
   initialState,
@@ -240,46 +236,42 @@ const latencySlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // Fetch latency data
       .addCase(fetchLatencyData.pending, (state) => {
-        console.log('🔄 fetchLatencyData.pending');
-        // Only set loading if we don't have any data at all
+        console.log('fetchLatencyData.pending');
         if (!state.data || state.data.length === 0) {
           state.loading = true;
         }
         state.error = null;
       })
       .addCase(fetchLatencyData.fulfilled, (state, action) => {
-        console.log('✅ fetchLatencyData.fulfilled with', action.payload.length, 'items');
+        console.log('fetchLatencyData.fulfilled with', action.payload.length, 'items');
         state.loading = false;
         state.data = action.payload;
         state.lastUpdated = new Date().toISOString();
         state.error = null;
       })
       .addCase(fetchLatencyData.rejected, (state, action) => {
-        console.log('❌ fetchLatencyData.rejected:', action.payload);
+        console.log('fetchLatencyData.rejected:', action.payload);
         state.loading = false;
         state.error = action.payload as string || 'Failed to fetch data';
       })
-      // Test data generation
       .addCase(generateTestData.pending, (state) => {
         console.log('🔄 generateTestData.pending');
         state.loading = true;
         state.error = null;
       })
       .addCase(generateTestData.fulfilled, (state, action) => {
-        console.log('✅ generateTestData.fulfilled with', action.payload.length, 'items');
+        console.log('generateTestData.fulfilled with', action.payload.length, 'items');
         state.loading = false;
         state.data = action.payload;
         state.lastUpdated = new Date().toISOString();
         state.error = null;
       })
       .addCase(generateTestData.rejected, (state, action) => {
-        console.log('❌ generateTestData.rejected:', action.payload);
+        console.log(' generateTestData.rejected:', action.payload);
         state.loading = false;
         state.error = action.payload as string || 'Failed to generate test data';
       })
-      // Fetch historical data
       .addCase(fetchHistoricalData.fulfilled, (state, action) => {
         const { exchange, data } = action.payload;
         state.historicalData[exchange] = data;
@@ -290,7 +282,6 @@ const latencySlice = createSlice({
   },
 });
 
-// Actions
 export const {
   setLoading,
   setError,
@@ -304,7 +295,6 @@ export const {
   updateExchangeLatency,
 } = latencySlice.actions;
 
-// Selectors
 export const selectLatencyData = (state: { latency: LatencyState }) => state.latency.data;
 export const selectHistoricalData = (state: { latency: LatencyState }) => state.latency.historicalData;
 export const selectLoading = (state: { latency: LatencyState }) => state.latency.loading;
@@ -316,13 +306,11 @@ export const selectRefreshInterval = (state: { latency: LatencyState }) => state
 export const selectCacheEnabled = (state: { latency: LatencyState }) => state.latency.cacheEnabled;
 export const selectAutoRefresh = (state: { latency: LatencyState }) => state.latency.autoRefresh;
 
-// Computed selectors
 export const selectExchangeByLatency = createSelector(
   [(state: { latency: LatencyState }) => state.latency.data],
   (data) => {
     const latencyData = data || [];
-    
-    // Handle empty data gracefully
+
     if (!latencyData || latencyData.length === 0) {
       return {
         excellent: [],

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 export interface PerformanceMetrics {
   fps: number;
   memoryUsage: number;
@@ -58,7 +59,6 @@ class PerformanceMonitor {
 
   private initializeDeviceInfo(): void {
     if (typeof window !== 'undefined') {
-      // Get device information
       const deviceInfo: DeviceInfo = {
         userAgent: navigator.userAgent,
         platform: navigator.platform,
@@ -67,8 +67,6 @@ class PerformanceMonitor {
         connection: (navigator as Navigator & { connection?: { effectiveType?: string } }).connection?.effectiveType || 'unknown',
         isMobile: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
       };
-
-      // Get WebGL information
       const canvas = document.createElement('canvas');
       const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
       
@@ -82,8 +80,6 @@ class PerformanceMonitor {
           maxViewportDims: webglContext.getParameter(webglContext.MAX_VIEWPORT_DIMS) || [0, 0],
           extensions: webglContext.getSupportedExtensions() || []
         };
-
-        // Try to get memory info if available
         try {
           const memoryInfo = (webglContext as WebGLRenderingContext & { getMemoryInfo?: () => { totalMemory: number; usedMemory: number; availableMemory: number } }).getMemoryInfo?.();
           if (memoryInfo) {
@@ -93,8 +89,8 @@ class PerformanceMonitor {
           console.warn('WebGL memory info not available');
         }
 
-        console.log('🎮 WebGL Info:', webglInfo);
-        console.log('📱 Device Info:', deviceInfo);
+        console.log('WebGL Info:', webglInfo);
+        console.log('Device Info:', deviceInfo);
       }
     }
   }
@@ -104,13 +100,11 @@ class PerformanceMonitor {
     
     this.isMonitoring = true;
     this.startTime = Date.now();
-    
-    // Monitor performance every 100ms
     this.monitoringInterval = setInterval(() => {
       this.updateMetrics();
     }, 100);
 
-    console.log('🚀 Performance monitoring started');
+    console.log('Performance monitoring started');
   }
 
   stopMonitoring(): void {
@@ -123,7 +117,7 @@ class PerformanceMonitor {
       this.monitoringInterval = null;
     }
 
-    console.log('⏹️ Performance monitoring stopped');
+    console.log('Performance monitoring stopped');
   }
 
   private updateMetrics(): void {
@@ -133,8 +127,6 @@ class PerformanceMonitor {
     if (deltaTime > 0) {
       const currentFps = 1000 / deltaTime;
       this.fpsHistory.push(currentFps);
-      
-      // Keep history within limits
       if (this.fpsHistory.length > this.maxHistoryLength) {
         this.fpsHistory.shift();
       }
@@ -142,13 +134,10 @@ class PerformanceMonitor {
 
     this.lastFrameTime = now;
     this.frameCount++;
-
-    // Calculate average FPS
     const averageFps = this.fpsHistory.length > 0 
       ? this.fpsHistory.reduce((sum, fps) => sum + fps, 0) / this.fpsHistory.length 
       : 0;
 
-    // Estimate memory usage (rough approximation)
     const estimatedMemory = this.estimateMemoryUsage();
 
     const metrics: PerformanceMetrics = {
@@ -163,20 +152,17 @@ class PerformanceMonitor {
     };
 
     this.metrics.push(metrics);
-    
-    // Keep metrics history within limits
+
     if (this.metrics.length > this.maxHistoryLength) {
       this.metrics.shift();
     }
-
-    // Check for performance issues
     this.checkPerformanceAlerts(metrics);
   }
 
   private estimateMemoryUsage(): number {
     if (typeof window !== 'undefined' && (performance as Performance & { memory?: { usedJSHeapSize: number } }).memory) {
       const memory = (performance as Performance & { memory: { usedJSHeapSize: number } }).memory;
-      return Math.round(memory.usedJSHeapSize / 1024 / 1024); // MB
+      return Math.round(memory.usedJSHeapSize / 1024 / 1024);
     }
     return 0;
   }
@@ -189,7 +175,6 @@ class PerformanceMonitor {
   }
 
   private getAverageApiResponseTime(): number {
-    // This would be populated by API calls
     return 0;
   }
 
@@ -245,9 +230,7 @@ class PerformanceMonitor {
 
   private checkPerformanceAlerts(metrics: PerformanceMetrics): void {
     const alerts: PerformanceAlert[] = [];
-
-    // FPS alerts - adjusted for 3D applications (lower threshold)
-    if (metrics.fps < 15) { // Changed from 30 to 15 for 3D apps
+    if (metrics.fps < 15) {
       alerts.push({
         type: 'warning',
         message: `Low FPS detected: ${metrics.fps}`,
@@ -256,8 +239,7 @@ class PerformanceMonitor {
       });
     }
 
-    // Memory alerts
-    if (metrics.memoryUsage > 200) { // Increased threshold
+    if (metrics.memoryUsage > 200) {
       alerts.push({
         type: 'warning',
         message: `High memory usage: ${metrics.memoryUsage}MB`,
@@ -266,8 +248,7 @@ class PerformanceMonitor {
       });
     }
 
-    // Render time alerts
-    if (metrics.renderTime > 33) { // Increased threshold for 3D
+    if (metrics.renderTime > 33) {
       alerts.push({
         type: 'warning',
         message: `Slow render time: ${metrics.renderTime}ms`,
@@ -276,22 +257,19 @@ class PerformanceMonitor {
       });
     }
 
-    // Add new alerts
+
     this.alerts.push(...alerts);
     
-    // Keep alerts history within limits
     if (this.alerts.length > 50) {
       this.alerts = this.alerts.slice(-50);
     }
 
-    // Only log critical alerts (severity 3) and limit frequency
     const criticalAlerts = alerts.filter(alert => alert.severity >= 3);
     if (criticalAlerts.length > 0) {
-      // Only log if we haven't logged a similar alert recently
       const lastAlert = this.alerts[this.alerts.length - 2];
-      if (!lastAlert || Date.now() - lastAlert.timestamp > 5000) { // 5 second cooldown
+      if (!lastAlert || Date.now() - lastAlert.timestamp > 5000) { 
         criticalAlerts.forEach(alert => {
-          console.warn(`🚨 Critical Performance Alert: ${alert.message}`);
+          console.warn(`Critical Performance Alert: ${alert.message}`);
         });
       }
     }
@@ -306,8 +284,6 @@ class PerformanceMonitor {
   }
 
   recordApiResponseTime(responseTime: number): void {
-    // Store API response times for analysis
-    // This could be expanded to track per-endpoint performance
   }
 
   getCurrentMetrics(): PerformanceMetrics | null {
@@ -383,7 +359,7 @@ class PerformanceMonitor {
     this.fpsHistory = [];
     this.memoryHistory = [];
     this.renderTimeHistory = [];
-    console.log('🗑️ Performance history cleared');
+    console.log('Performance history cleared');
   }
 
   isMonitoringActive(): boolean {
@@ -391,12 +367,10 @@ class PerformanceMonitor {
   }
 }
 
-// Export singleton instance
+
 export const performanceMonitor = new PerformanceMonitor();
 
-// Utility function to start monitoring automatically in development
 if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
-  // Start monitoring after a short delay to allow app to initialize
   setTimeout(() => {
     performanceMonitor.startMonitoring();
   }, 1000);

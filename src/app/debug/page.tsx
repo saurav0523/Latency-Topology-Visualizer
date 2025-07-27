@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-html-link-for-pages */
 "use client";
 
 import { useEffect, useState } from 'react';
@@ -30,7 +31,6 @@ export default function DebugPage() {
         </h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Client State */}
           <div className="bg-white rounded-lg shadow p-6">
             <h2 className="text-xl font-semibold mb-4">Client State</h2>
             <div className="space-y-2">
@@ -47,7 +47,6 @@ export default function DebugPage() {
             </div>
           </div>
 
-          {/* Redux State */}
           <div className="bg-white rounded-lg shadow p-6">
             <h2 className="text-xl font-semibold mb-4">Redux State</h2>
             <div className="space-y-2">
@@ -74,7 +73,6 @@ export default function DebugPage() {
             </div>
           </div>
 
-          {/* Data Preview */}
           <div className="bg-white rounded-lg shadow p-6 md:col-span-2">
             <h2 className="text-xl font-semibold mb-4">Data Preview</h2>
             {latencyData && latencyData.length > 0 ? (
@@ -96,7 +94,6 @@ export default function DebugPage() {
             )}
           </div>
 
-          {/* Environment Info */}
           <div className="bg-white rounded-lg shadow p-6 md:col-span-2">
             <h2 className="text-xl font-semibold mb-4">Environment Information</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -116,7 +113,6 @@ export default function DebugPage() {
           </div>
         </div>
 
-        {/* Navigation */}
         <div className="mt-8 flex space-x-4">
           <a 
             href="/"

@@ -1,6 +1,6 @@
 import { createSlice, createSelector, PayloadAction } from '@reduxjs/toolkit';
 
-// Types
+
 export interface UIState {
   theme: 'light' | 'dark';
   sidebarOpen: boolean;
@@ -13,7 +13,7 @@ export interface UIState {
   autoRefresh: boolean;
   refreshInterval: number;
   notifications: Notification[];
-  lastUpdated: string | null; // Changed from Date to string
+  lastUpdated: string | null; 
   isClient: boolean;
 }
 
@@ -21,11 +21,11 @@ export interface Notification {
   id: string;
   type: 'success' | 'error' | 'warning' | 'info';
   message: string;
-  timestamp: string; // Changed from Date to string
+  timestamp: string; 
   read: boolean;
 }
 
-// Initial state
+
 const initialState: UIState = {
   theme: 'light',
   sidebarOpen: false,
@@ -42,7 +42,6 @@ const initialState: UIState = {
   isClient: false,
 };
 
-// Slice
 const uiSlice = createSlice({
   name: 'ui',
   initialState,
@@ -120,7 +119,7 @@ const uiSlice = createSlice({
   },
 });
 
-// Actions
+
 export const {
   setTheme,
   toggleSidebar,
@@ -144,7 +143,6 @@ export const {
   resetFilters,
 } = uiSlice.actions;
 
-// Selectors
 export const selectTheme = (state: { ui: UIState }) => state.ui.theme;
 export const selectSidebarOpen = (state: { ui: UIState }) => state.ui.sidebarOpen;
 export const selectSelectedCloudProvider = (state: { ui: UIState }) => state.ui.selectedCloudProvider;
@@ -159,7 +157,7 @@ export const selectNotifications = (state: { ui: UIState }) => state.ui.notifica
 export const selectLastUpdated = (state: { ui: UIState }) => state.ui.lastUpdated;
 export const selectIsClient = (state: { ui: UIState }) => state.ui.isClient;
 
-// Computed selectors
+
 export const selectUnreadNotifications = createSelector(
   [(state: { ui: UIState }) => state.ui.notifications],
   (notifications) => notifications.filter(n => !n.read)

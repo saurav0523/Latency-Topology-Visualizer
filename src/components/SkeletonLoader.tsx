@@ -33,7 +33,6 @@ const SkeletonCard: React.FC<SkeletonCardProps> = ({
   return (
     <div className={`bg-white/70 backdrop-blur-sm rounded-xl border border-gray-200/50 shadow-sm ${variantClasses} ${className}`}>
       <div className={animationClass}>
-      {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex-1">
           <div className="h-6 bg-gray-200 rounded mb-2 w-3/4"></div>
@@ -41,8 +40,7 @@ const SkeletonCard: React.FC<SkeletonCardProps> = ({
         </div>
         <div className="h-8 bg-gray-200 rounded-full w-16"></div>
       </div>
-      
-      {/* Progress bar */}
+
       <div className="space-y-2">
         <div className="h-2 bg-gray-200 rounded-full"></div>
         <div className="flex justify-between text-xs text-gray-400">
@@ -51,7 +49,6 @@ const SkeletonCard: React.FC<SkeletonCardProps> = ({
         </div>
       </div>
 
-        {/* Additional content for detailed variant */}
         {variant === 'detailed' && (
           <div className="mt-4 space-y-3">
             <div className="h-4 bg-gray-200 rounded w-full"></div>
@@ -78,14 +75,13 @@ export const SkeletonStats: React.FC<SkeletonStatsProps> = ({
   const [currentStage, setCurrentStage] = useState(loadingStage);
   const [visibleCount, setVisibleCount] = useState(0);
 
-  // Progressive loading effect
+
   useEffect(() => {
     setCurrentStage(loadingStage);
     
     if (loadingStage === 'initial') {
       setVisibleCount(0);
     } else if (loadingStage === 'data') {
-      // Show stats progressively
       const timer = setTimeout(() => setVisibleCount(Math.min(3, count)), 200);
       const timer2 = setTimeout(() => setVisibleCount(Math.min(5, count)), 400);
       const timer3 = setTimeout(() => setVisibleCount(count), 600);
@@ -112,7 +108,7 @@ export const SkeletonStats: React.FC<SkeletonStatsProps> = ({
   }, [variant]);
 
   if (currentStage === 'complete') {
-    return null; // Don't show skeleton when loading is complete
+    return null; 
   }
 
   return (
@@ -185,7 +181,6 @@ export const SkeletonMap: React.FC<SkeletonMapProps> = ({
     <div className="p-6">
       <div className="animate-pulse">
           <div className="h-64 bg-gray-200 rounded-lg mb-4 relative overflow-hidden">
-            {/* Progress overlay */}
             <div className="absolute inset-0 bg-blue-500 bg-opacity-10 flex items-center justify-center">
               <div className="text-center">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
@@ -263,14 +258,11 @@ export const SkeletonChart: React.FC<SkeletonChartProps> = ({
     <div className="p-6">
       <div className="animate-pulse">
           <div className="h-64 bg-gray-200 rounded-lg mb-4 relative overflow-hidden">
-            {/* Chart loading animation */}
             <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 flex items-center justify-center">
               <div className="text-center">
                 <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-500 mx-auto mb-3"></div>
                 <p className="text-blue-800 font-medium text-sm">{getLoadingText()}</p>
                 <p className="text-blue-600 text-xs mt-1">{dataPoints} data points loaded</p>
-                
-                {/* Animated chart bars */}
                 <div className="flex items-end justify-center space-x-1 mt-4 h-16">
                   {Array.from({ length: Math.min(dataPoints, 10) }).map((_, i) => (
                     <div
@@ -372,7 +364,6 @@ export const SkeletonHeader: React.FC<SkeletonHeaderProps> = ({
   );
 };
 
-// Performance monitoring component
 interface PerformanceMonitorProps {
   className?: string;
 }
@@ -395,8 +386,7 @@ export const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({ classNam
         frameCount = 0;
         lastTime = currentTime;
       }
-      
-      // Measure render time
+   
       const renderStart = performance.now();
       requestAnimationFrame(() => {
         const renderEnd = performance.now();

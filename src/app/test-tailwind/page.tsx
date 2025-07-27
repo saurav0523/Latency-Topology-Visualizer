@@ -11,7 +11,7 @@ export default function TestTailwindPage() {
         </h1>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* Test Card 1 */}
+ 
           <div className="bg-white rounded-lg shadow-lg p-6 border border-gray-200">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">Basic Styling</h2>
             <p className="text-gray-600 mb-4">
@@ -22,7 +22,6 @@ export default function TestTailwindPage() {
             </button>
           </div>
 
-          {/* Test Card 2 */}
           <div className="bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg shadow-lg p-6 text-white">
             <h2 className="text-xl font-semibold mb-4">Gradients & Colors</h2>
             <p className="mb-4 opacity-90">
@@ -34,7 +33,6 @@ export default function TestTailwindPage() {
             </div>
           </div>
 
-          {/* Test Card 3 */}
           <div className="bg-gray-900 text-white rounded-lg shadow-lg p-6">
             <h2 className="text-xl font-semibold mb-4">Dark Theme</h2>
             <p className="text-gray-300 mb-4">
@@ -50,7 +48,6 @@ export default function TestTailwindPage() {
             </div>
           </div>
 
-          {/* Test Card 4 */}
           <div className="bg-white rounded-lg shadow-lg p-6 border border-gray-200">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">Animations</h2>
             <p className="text-gray-600 mb-4">
@@ -63,7 +60,6 @@ export default function TestTailwindPage() {
             </div>
           </div>
 
-          {/* Test Card 5 */}
           <div className="bg-white rounded-lg shadow-lg p-6 border border-gray-200">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">Responsive Design</h2>
             <p className="text-gray-600 mb-4">
@@ -76,7 +72,7 @@ export default function TestTailwindPage() {
             </div>
           </div>
 
-          {/* Test Card 6 */}
+     
           <div className="bg-white rounded-lg shadow-lg p-6 border border-gray-200">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">Custom Animations</h2>
             <p className="text-gray-600 mb-4">
@@ -90,7 +86,7 @@ export default function TestTailwindPage() {
           </div>
         </div>
 
-        {/* Status Indicators */}
+
         <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="bg-green-50 border border-green-200 rounded-lg p-4">
             <div className="flex items-center">
@@ -114,7 +110,6 @@ export default function TestTailwindPage() {
           </div>
         </div>
 
-        {/* Back to Main App */}
         <div className="mt-8 text-center">
           <Link
             href="/"

@@ -73,27 +73,24 @@ export default function ControlsPanel({
   const [isExpanded, setIsExpanded] = useState(!isMobile);
 
   return (
-    <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-xl border border-gray-200/50 dark:border-gray-700/50 shadow-sm p-6 mb-6">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Controls</h3>
+    <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-xl border border-gray-200/50 dark:border-gray-700/50 shadow-sm p-3 sm:p-4 lg:p-6 mb-4 sm:mb-6">
+      <div className="flex items-center justify-between mb-3 sm:mb-4">
+        <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">Controls</h3>
         <button
           onClick={() => setIsExpanded(!isExpanded)}
-          className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+          className="p-1 sm:p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className={`w-4 h-4 sm:w-5 sm:h-5 transition-transform ${isExpanded ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
           </svg>
         </button>
       </div>
 
       {isExpanded && (
-        <div className="space-y-6">
-          {/* Search and Filter Section */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {/* Search */}
+        <div className="space-y-4 sm:space-y-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 sm:mb-2">
                 Search Exchanges
               </label>
               <input
@@ -101,19 +98,18 @@ export default function ControlsPanel({
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search by name or region..."
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
 
-            {/* Cloud Provider Filter */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 sm:mb-2">
                 Cloud Provider
               </label>
               <select
                 value={selectedCloudProvider || ''}
                 onChange={(e) => setSelectedCloudProvider(e.target.value || null)}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               >
                 <option value="">All Providers</option>
                 {Object.entries(CLOUD_PROVIDERS).map(([key, provider]) => (
@@ -124,19 +120,18 @@ export default function ControlsPanel({
               </select>
             </div>
 
-            {/* Latency Range */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 sm:mb-2">
                 Latency Range: {latencyRange.min}-{latencyRange.max}ms
               </label>
-              <div className="space-y-2">
+              <div className="space-y-1 sm:space-y-2">
                 <input
                   type="range"
                   min="0"
                   max="200"
                   value={latencyRange.min}
                   onChange={(e) => setLatencyRange({ ...latencyRange, min: parseInt(e.target.value) })}
-                  className="w-full"
+                  className="w-full h-2 sm:h-3"
                 />
                 <input
                   type="range"
@@ -144,15 +139,13 @@ export default function ControlsPanel({
                   max="200"
                   value={latencyRange.max}
                   onChange={(e) => setLatencyRange({ ...latencyRange, max: parseInt(e.target.value) })}
-                  className="w-full"
+                  className="w-full h-2 sm:h-3"
                 />
               </div>
             </div>
           </div>
 
-          {/* Visualization Controls */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {/* Map View */}
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Map View
@@ -180,8 +173,6 @@ export default function ControlsPanel({
                 </button>
               </div>
             </div>
-
-            {/* Chart Type */}
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Chart Type
@@ -196,8 +187,6 @@ export default function ControlsPanel({
                 <option value="area">Area</option>
               </select>
             </div>
-
-            {/* Time Range */}
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Time Range
@@ -214,7 +203,7 @@ export default function ControlsPanel({
               </select>
             </div>
 
-            {/* Refresh Interval */}
+
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Refresh: {refreshInterval / 1000}s
@@ -232,9 +221,7 @@ export default function ControlsPanel({
             </div>
           </div>
 
-          {/* Toggle Controls */}
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            {/* Tooltips */}
             <div className="flex items-center space-x-2">
               <input
                 type="checkbox"
@@ -248,7 +235,6 @@ export default function ControlsPanel({
               </label>
             </div>
 
-            {/* Real-time Data */}
             <div className="flex items-center space-x-2">
               <input
                 type="checkbox"
@@ -262,7 +248,6 @@ export default function ControlsPanel({
               </label>
             </div>
 
-            {/* Historical Data */}
             <div className="flex items-center space-x-2">
               <input
                 type="checkbox"
@@ -276,7 +261,6 @@ export default function ControlsPanel({
               </label>
             </div>
 
-            {/* Regions */}
             <div className="flex items-center space-x-2">
               <input
                 type="checkbox"
@@ -290,7 +274,6 @@ export default function ControlsPanel({
               </label>
             </div>
 
-            {/* Auto Refresh */}
             <div className="flex items-center space-x-2">
               <input
                 type="checkbox"
@@ -304,7 +287,6 @@ export default function ControlsPanel({
               </label>
             </div>
 
-            {/* Cache Control */}
             <div className="flex items-center space-x-2">
               <input
                 type="checkbox"
@@ -317,8 +299,6 @@ export default function ControlsPanel({
                 API Cache
               </label>
             </div>
-
-            {/* Data Source */}
             <div className="flex items-center space-x-2">
               <input
                 type="checkbox"
@@ -333,7 +313,7 @@ export default function ControlsPanel({
             </div>
           </div>
 
-          {/* Action Buttons */}
+
           <div className="flex flex-wrap gap-3">
             <button
               onClick={() => setShowExportPanel(true)}

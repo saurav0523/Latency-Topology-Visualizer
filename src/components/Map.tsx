@@ -18,7 +18,6 @@ interface MapProps {
   latencyRange: { min: number; max: number };
 }
 
-// Earth component with texture
 function Earth({ performanceMode = false }: { performanceMode?: boolean }) {
   const meshRef = useRef<THREE.Mesh>(null);
   
@@ -41,7 +40,6 @@ function Earth({ performanceMode = false }: { performanceMode?: boolean }) {
   );
 }
 
-// Exchange marker component
 function ExchangeMarker({ 
   exchange, 
   position, 
@@ -67,23 +65,20 @@ function ExchangeMarker({
 }) {
   const meshRef = useRef<THREE.Mesh>(null);
   const [hovered, setHovered] = useState(false);
-  
-  // Animate marker - reduced animation in performance mode
+
   useFrame((state) => {
     if (meshRef.current && !performanceMode && !isSelected) {
-      // Only animate if not selected and not in performance mode
-      meshRef.current.position.y = position[1] + Math.sin(state.clock.elapsedTime * 1) * 1; // Reduced animation
-      meshRef.current.rotation.y += 0.01; // Reduced rotation speed
+      meshRef.current.position.y = position[1] + Math.sin(state.clock.elapsedTime * 1) * 1; 
+      meshRef.current.rotation.y += 0.01; 
     }
   });
 
-  // Get color based on latency and cloud provider
   const getMarkerColor = () => {
     const normalizedLatency = (latency - latencyRange.min) / (latencyRange.max - latencyRange.min);
     
-    if (normalizedLatency < 0.3) return '#22c55e'; // Green for low latency
-    if (normalizedLatency < 0.7) return '#eab308'; // Yellow for medium latency
-    return '#ef4444'; // Red for high latency
+    if (normalizedLatency < 0.3) return '#22c55e';
+    if (normalizedLatency < 0.7) return '#eab308';
+    return '#ef4444';
   };
 
   const getCloudColor = () => {
@@ -96,7 +91,6 @@ function ExchangeMarker({
 
   return (
     <group position={position}>
-      {/* Main marker */}
       <mesh
         ref={meshRef}
         onClick={onSelect}
@@ -110,14 +104,12 @@ function ExchangeMarker({
           emissiveIntensity={0.2}
         />
       </mesh>
-      
-      {/* Cloud provider ring */}
+
       <mesh position={[0, 0, 0]}>
         <ringGeometry args={[markerSize + 1, markerSize + 1.5, 16]} />
         <meshBasicMaterial color={cloudProviderColor} transparent opacity={0.6} />
       </mesh>
-      
-      {/* Pulse effect for selected marker - only if not in performance mode */}
+
       {isSelected && !performanceMode && (
         <mesh>
           <sphereGeometry args={[markerSize + 3, 16, 16]} />
@@ -125,7 +117,6 @@ function ExchangeMarker({
         </mesh>
       )}
       
-      {/* Tooltip */}
       {showTooltip && (hovered || isSelected) && (
         <Html position={[0, markerSize + 5, 0]} center>
           <div className="bg-black/80 text-white p-3 rounded-lg text-sm whitespace-nowrap">
@@ -136,8 +127,6 @@ function ExchangeMarker({
           </div>
         </Html>
       )}
-      
-      {/* Exchange name label */}
       {(isSelected || hovered) && (
         <Text
           position={[0, markerSize + 8, 0]}
@@ -153,7 +142,6 @@ function ExchangeMarker({
   );
 }
 
-// Latency connection component
 function LatencyConnection({ 
   from, 
   to, 
@@ -166,14 +154,12 @@ function LatencyConnection({
   latencyRange: { min: number; max: number };
 }) {
   const lineRef = useRef<THREE.Line>(null);
-  
-  // Get color based on latency
+
   const getConnectionColor = () => {
     const normalizedLatency = (latency - latencyRange.min) / (latencyRange.max - latencyRange.min);
-    
-    if (normalizedLatency < 0.3) return '#22c55e'; // Green for low latency
-    if (normalizedLatency < 0.7) return '#eab308'; // Yellow for medium latency
-    return '#ef4444'; // Red for high latency
+    if (normalizedLatency < 0.3) return '#22c55e';
+    if (normalizedLatency < 0.7) return '#eab308';
+    return '#ef4444';
   };
 
   const color = getConnectionColor();
@@ -185,7 +171,6 @@ function LatencyConnection({
   );
 }
 
-// Cloud region visualization
 function CloudRegion({ 
   region, 
   exchanges, 
@@ -230,7 +215,6 @@ function CloudRegion({
   );
 }
 
-// Main 3D scene component
 function LatencyScene({ 
   data, 
   selectedExchange, 
@@ -242,10 +226,7 @@ function LatencyScene({
   performanceMode 
 }: MapProps & { performanceMode: boolean }) {
   const { camera } = useThree();
-  
-  // Filter data based on search query and latency range - with debouncing
   const filteredData = useMemo(() => {
-    // If data is empty, return empty array to prevent blinking
     if (!data || data.length === 0) {
       return [];
     }
@@ -262,7 +243,6 @@ function LatencyScene({
     });
   }, [data, searchQuery, latencyRange]);
 
-  // Group exchanges by region for cloud region visualization
   const exchangesByRegion = useMemo(() => {
     const grouped: { [key: string]: LatencyData[] } = {};
     filteredData.forEach(exchange => {
@@ -273,7 +253,6 @@ function LatencyScene({
     return grouped;
   }, [filteredData]);
 
-  // Convert lat/lng to 3D position - memoized to prevent recalculation
   const getPosition = useCallback((lat: number, lng: number): [number, number, number] => {
     const radius = 102; // Slightly larger than Earth radius
     const phi = (90 - lat) * (Math.PI / 180);
@@ -285,23 +264,20 @@ function LatencyScene({
     
     return [x, y, z];
   }, []);
-
-  // Auto-rotate camera - optimized for performance and reduced frequency
   useEffect(() => {
-    if (performanceMode) return; // Disable auto-rotation in performance mode
+    if (performanceMode) return; 
     
     const interval = setInterval(() => {
       if (camera && !selectedExchange) {
-        camera.position.x = Math.cos(Date.now() * 0.00005) * 300; // Reduced speed
+        camera.position.x = Math.cos(Date.now() * 0.00005) * 300; 
         camera.position.z = Math.sin(Date.now() * 0.00005) * 300;
         camera.lookAt(0, 0, 0);
       }
-    }, 32); // Reduced frequency from 16ms to 32ms
+    }, 32); 
 
     return () => clearInterval(interval);
   }, [camera, selectedExchange, performanceMode]);
 
-  // Don't render if no data to prevent blinking
   if (!filteredData || filteredData.length === 0) {
     return (
       <>
@@ -322,10 +298,7 @@ function LatencyScene({
 
   return (
     <>
-      {/* Earth */}
       <Earth performanceMode={performanceMode} />
-      
-      {/* Stars background - reduced count for performance */}
       <Stars 
         radius={300} 
         depth={50} 
@@ -334,14 +307,10 @@ function LatencyScene({
         saturation={0} 
         fade 
       />
-      
-      {/* Ambient light */}
       <ambientLight intensity={0.3} />
-      
-      {/* Directional light */}
+    
       <directionalLight position={[10, 10, 5]} intensity={1} />
-      
-      {/* Exchange markers - limit number in performance mode */}
+   
       {(performanceMode ? filteredData.slice(0, 20) : filteredData).map((exchange) => {
         const position = getPosition(exchange.location.lat, exchange.location.lng);
         const isSelected = selectedExchange === exchange.exchange;
@@ -362,8 +331,7 @@ function LatencyScene({
           />
         );
       })}
-      
-      {/* Cloud regions - only show in non-performance mode */}
+ 
       {!performanceMode && Object.entries(exchangesByRegion).map(([key, exchanges]) => {
         const [cloud, region] = key.split('-');
         return (
@@ -376,13 +344,12 @@ function LatencyScene({
           />
         );
       })}
-      
-      {/* Latency connections (show connections from selected exchange) */}
+
       {selectedExchange && filteredData.length > 1 && (
         <>
           {filteredData
             .filter(exchange => exchange.exchange !== selectedExchange)
-            .slice(0, 5) // Limit to 5 connections for performance
+            .slice(0, 5)
             .map((exchange) => {
               const fromPosition = getPosition(
                 filteredData.find(e => e.exchange === selectedExchange)!.location.lat,
@@ -406,7 +373,7 @@ function LatencyScene({
   );
 }
 
-// 2D Map fallback component
+
 function Map2D({ 
   data, 
   selectedExchange, 
@@ -443,7 +410,6 @@ function Map2D({
 
   return (
     <div className="w-full h-96 bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-800 dark:to-gray-900 rounded-lg relative overflow-hidden">
-      {/* World map background */}
       <div className="absolute inset-0 opacity-20">
         <svg viewBox="0 0 1000 500" className="w-full h-full">
           <path d="M100,200 Q300,150 500,200 T900,200" stroke="#1e40af" strokeWidth="2" fill="none"/>
@@ -455,9 +421,7 @@ function Map2D({
         </svg>
       </div>
 
-      {/* Exchange markers */}
       {filteredData.map((exchange) => {
-        // Simple 2D positioning based on lat/lng
         const x = ((exchange.location.lng + 180) / 360) * 100;
         const y = ((90 - exchange.location.lat) / 180) * 100;
         const isSelected = selectedExchange === exchange.exchange;
@@ -476,7 +440,6 @@ function Map2D({
             onMouseEnter={() => setHoveredExchange(exchange.exchange)}
             onMouseLeave={() => setHoveredExchange(null)}
           >
-            {/* Marker */}
             <div
               className={`w-4 h-4 rounded-full border-2 border-white shadow-lg transition-all duration-200 ${
                 isSelected ? 'scale-150' : isHovered ? 'scale-125' : 'scale-100'
@@ -486,8 +449,6 @@ function Map2D({
                 borderColor: getCloudColor(exchange.cloud)
               }}
             />
-            
-            {/* Tooltip */}
             {showTooltips && (isHovered || isSelected) && (
               <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-black/90 text-white text-xs rounded-lg whitespace-nowrap z-20">
                 <div className="font-bold">{exchange.exchange}</div>
@@ -500,7 +461,6 @@ function Map2D({
         );
               })}
 
-      {/* Legend */}
       <div className="absolute bottom-4 left-4 bg-white/90 dark:bg-gray-800/90 p-3 rounded-lg text-sm">
         <div className="font-bold mb-2">Latency Colors:</div>
         <div className="flex items-center space-x-2 mb-1">
@@ -517,7 +477,6 @@ function Map2D({
         </div>
       </div>
 
-      {/* Stats */}
       <div className="absolute top-4 right-4 bg-white/90 dark:bg-gray-800/90 p-3 rounded-lg text-sm">
         <div className="font-bold mb-1">Active Exchanges</div>
         <div className="text-2xl font-bold">{filteredData.length}</div>
@@ -526,17 +485,15 @@ function Map2D({
   );
 }
 
-// Main Map component
+
 export default function LatencyMap(props: MapProps) {
   const [mounted, setMounted] = useState(false);
   const [performanceMode, setPerformanceMode] = useState(false);
   const [use2D, setUse2D] = useState(false);
-  const [canvasKey, setCanvasKey] = useState(0); // Add key to prevent unnecessary Canvas recreation
+  const [canvasKey, setCanvasKey] = useState(0); 
 
   useEffect(() => {
     setMounted(true);
-    
-    // Detect low-end devices and enable performance mode
     const isLowEndDevice = () => {
       const canvas = document.createElement('canvas');
       const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl') as WebGLRenderingContext | null;
@@ -553,14 +510,11 @@ export default function LatencyMap(props: MapProps) {
     
     if (isLowEndDevice()) {
       setPerformanceMode(true);
-      setUse2D(true); // Force 2D for very low-end devices
+      setUse2D(true);
     }
   }, []);
-
-  // Use 2D mode if explicitly requested or if performance mode is enabled
   const shouldUse2D = props.view === '2d' || use2D;
 
-  // Only recreate Canvas if view mode changes
   useEffect(() => {
     if (mounted) {
       setCanvasKey(prev => prev + 1);
@@ -575,7 +529,6 @@ export default function LatencyMap(props: MapProps) {
     );
   }
 
-  // Use 2D map for better performance
   if (shouldUse2D) {
     return <Map2D {...props} />;
   }
@@ -583,7 +536,7 @@ export default function LatencyMap(props: MapProps) {
   return (
     <div className="w-full h-96 relative">
       <Canvas
-        key={canvasKey} // Use key to prevent unnecessary recreation
+        key={canvasKey} 
         camera={{ position: [0, 0, 300], fov: 60 }}
         style={{ background: 'linear-gradient(to bottom, #0f172a, #1e293b)' }}
         gl={{
@@ -611,23 +564,20 @@ export default function LatencyMap(props: MapProps) {
           dampingFactor={0.05}
         />
       </Canvas>
-      
-      {/* Performance mode indicator */}
+
       {performanceMode && (
         <div className="absolute top-4 left-4 bg-yellow-500/90 text-black p-2 rounded-lg text-xs font-bold">
           Performance Mode
         </div>
       )}
-      
-      {/* 2D Fallback Button */}
+
       <button
         onClick={() => setUse2D(!use2D)}
         className="absolute top-4 left-4 bg-blue-500/90 text-white p-2 rounded-lg text-xs font-bold hover:bg-blue-600/90 transition-colors"
       >
         Switch to {use2D ? '3D' : '2D'}
       </button>
-      
-      {/* Legend */}
+
       <div className="absolute bottom-4 left-4 bg-black/80 text-white p-3 rounded-lg text-sm">
         <div className="font-bold mb-2">Latency Colors:</div>
         <div className="flex items-center space-x-2 mb-1">
@@ -653,8 +603,7 @@ export default function LatencyMap(props: MapProps) {
           </div>
         ))}
       </div>
-      
-      {/* Stats overlay */}
+
       <div className="absolute top-4 right-4 bg-black/80 text-white p-3 rounded-lg text-sm">
         <div className="font-bold mb-1">Active Exchanges</div>
         <div className="text-2xl font-bold">{props.data.length}</div>

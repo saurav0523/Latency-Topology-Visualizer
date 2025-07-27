@@ -23,8 +23,6 @@ import {
   selectExchangeCount,
   selectAutoRefresh,
   setAutoRefresh,
-  clearError,
-  updateExchangeLatency,
 } from '../store/slices/latencySlice';
 import {
   setConnectionStatus,
@@ -44,7 +42,6 @@ import {
 export const useReduxLatency = () => {
   const dispatch = useAppDispatch();
 
-  // Selectors
   const data = useAppSelector(selectLatencyData);
   const historicalData = useAppSelector(selectHistoricalData);
   const loading = useAppSelector(selectLoading);
@@ -60,26 +57,21 @@ export const useReduxLatency = () => {
   const uiLastUpdated = useAppSelector(selectUILastUpdated);
   const autoRefresh = useAppSelector(selectAutoRefresh);
 
-  // Computed selectors
   const exchangeByLatency = useAppSelector(selectExchangeByLatency);
   const averageLatency = useAppSelector(selectAverageLatency);
   const exchangeCount = useAppSelector(selectExchangeCount);
 
-  // Debug logging removed for performance
 
-  // Set client flag on mount
   useEffect(() => {
     dispatch(setIsClient(true));
   }, [dispatch]);
 
-  // Fetch data function
   const fetchData = useCallback(async (useRealMeasurement: boolean = false) => {
     try {
       dispatch(setConnectionStatus('connecting'));
-      dispatch(setError(null)); // Clear any previous errors
+      dispatch(setError(null)); 
       const startTime = Date.now();
       
-      // Use the proper Redux async thunk
       await dispatch(fetchLatencyData()).unwrap();
       
       const responseTime = Date.now() - startTime;
@@ -104,13 +96,12 @@ export const useReduxLatency = () => {
       }));
       dispatch(setApiTokenValid(false));
       
-      // Set error message
       const errorMessage = error instanceof Error ? error.message : 'Failed to fetch data';
       dispatch(setError(errorMessage));
     }
   }, [dispatch]);
 
-  // Fetch historical data function
+
   const fetchHistoricalDataForExchange = useCallback(async (exchange: string, range: '1h' | '24h' | '7d' | '30d') => {
     try {
       const startTime = Date.now();
@@ -130,8 +121,6 @@ export const useReduxLatency = () => {
         success: false,
         responseTime: 0,
       }));
-      
-      // Set error message if not already set
       if (!error) {
         const errorMessage = error instanceof Error ? error.message : 'Failed to fetch historical data';
         dispatch(setError(errorMessage));
@@ -139,7 +128,6 @@ export const useReduxLatency = () => {
     }
   }, [dispatch]);
 
-  // Actions
   const selectExchange = useCallback((exchange: string | null) => {
     dispatch(setSelectedExchange(exchange));
   }, [dispatch]);
@@ -158,28 +146,18 @@ export const useReduxLatency = () => {
 
   const toggleCache = useCallback((enabled: boolean) => {
     dispatch(setCacheEnabled(enabled));
-    // Also update the service cache setting
     cloudflareApiService.setCacheEnabled(enabled);
   }, [dispatch]);
 
-  // Auto-refresh effect - simplified to not interfere with initial display
   useEffect(() => {
     if (!isClient) return;
-
-    console.log('🔄 Auto-refresh effect triggered, isClient:', isClient);
-
-    // Only set up interval if auto-refresh is enabled
+    console.log('Auto-refresh effect triggered, isClient:', isClient);
     if (autoRefresh) {
       const interval = setInterval(() => {
-        console.log('🔄 Auto-refresh interval triggered');
-        
-        // If cache is enabled, check if we have recent data before fetching
         if (cacheEnabled && data && data.length > 0) {
           const lastUpdate = lastUpdated ? new Date(lastUpdated).getTime() : 0;
           const now = Date.now();
           const timeSinceLastUpdate = now - lastUpdate;
-          
-          // If data is less than 30 seconds old, skip the fetch to avoid loading flicker
           if (timeSinceLastUpdate < 30000) {
             console.log('⏭️ Skipping auto-refresh - data is recent enough');
             return;
@@ -191,9 +169,7 @@ export const useReduxLatency = () => {
 
       return () => clearInterval(interval);
     }
-  }, [isClient, fetchData, refreshInterval, autoRefresh, cacheEnabled, data, lastUpdated]); // Added cache and data dependencies
-
-  // Fetch historical data when exchange or time range changes
+  }, [isClient, fetchData, refreshInterval, autoRefresh, cacheEnabled, data, lastUpdated]); 
   useEffect(() => {
     if (selectedExchange && isClient) {
       fetchHistoricalDataForExchange(selectedExchange, timeRange);
@@ -201,7 +177,6 @@ export const useReduxLatency = () => {
   }, [selectedExchange, timeRange, fetchHistoricalDataForExchange, isClient]);
 
   return {
-    // State
     data,
     historicalData,
     loading,
@@ -216,13 +191,9 @@ export const useReduxLatency = () => {
     isClient,
     uiLastUpdated,
     autoRefresh,
-    
-    // Computed data
     exchangeByLatency,
     averageLatency,
     exchangeCount,
-    
-    // Actions
     fetchData,
     fetchHistoricalData: fetchHistoricalDataForExchange,
     selectExchange,

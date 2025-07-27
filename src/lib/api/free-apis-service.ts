@@ -1,9 +1,7 @@
 import { LatencyData } from './cloudflare-service';
 import { EXCHANGES } from '../constants';
 
-// Free API endpoints for latency measurement
 const FREE_API_ENDPOINTS = {
-  // Public APIs that don't require authentication
   'httpbin': 'https://httpbin.org/delay/0',
   'jsonplaceholder': 'https://jsonplaceholder.typicode.com/posts/1',
   'randomuser': 'https://randomuser.me/api/',
@@ -12,12 +10,6 @@ const FREE_API_ENDPOINTS = {
   'weather': 'https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&current=temperature_2m',
 };
 
-// Alternative monitoring services (free tiers)
-const MONITORING_ENDPOINTS = {
-  'uptimerobot': 'https://api.uptimerobot.com/v2/getMonitors', // Requires API key
-  'statuscake': 'https://api.statuscake.com/v1/tests', // Requires API key
-  'pingdom': 'https://api.pingdom.com/api/3.1/checks', // Requires API key
-};
 
 export interface FreeApiLatencyResult {
   endpoint: string;
@@ -28,22 +20,18 @@ export interface FreeApiLatencyResult {
 
 export interface AlternativeLatencyData extends LatencyData {
   source: 'free-api' | 'monitoring-service' | 'exchange-api';
-  reliability: number; // 0-1 score
+  reliability: number; 
 }
 
 class FreeApisService {
-  // Measure latency to free public APIs
   async measureFreeApiLatency(): Promise<FreeApiLatencyResult[]> {
     const results: FreeApiLatencyResult[] = [];
     
     for (const [name, endpoint] of Object.entries(FREE_API_ENDPOINTS)) {
       try {
         const startTime = Date.now();
-        
-        // Use a timeout to prevent hanging requests
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 3000); // 3 second timeout
-        
+        const timeoutId = setTimeout(() => controller.abort(), 3000);
         const response = await fetch(endpoint, {
           method: 'GET',
           signal: controller.signal,
@@ -65,12 +53,12 @@ class FreeApisService {
             timestamp: new Date().toISOString()
           });
           
-          console.log(`✅ Free API latency measured for ${name}: ${latency}ms`);
+          console.log(`Free API latency measured for ${name}: ${latency}ms`);
         } else {
           throw new Error(`HTTP ${response.status}`);
         }
       } catch (error) {
-        console.warn(`⚠️ Failed to measure free API latency for ${name}:`, error);
+        console.warn(`Failed to measure free API latency for ${name}:`, error);
         
         results.push({
           endpoint: name,
@@ -83,33 +71,19 @@ class FreeApisService {
     
     return results;
   }
-
-  // Generate alternative latency data based on free API measurements
   async generateAlternativeLatencyData(): Promise<AlternativeLatencyData[]> {
     const freeApiResults = await this.measureFreeApiLatency();
-    
-    // Calculate average latency from successful measurements
     const successfulResults = freeApiResults.filter(r => r.status === 'success');
     const avgLatency = successfulResults.length > 0 
       ? successfulResults.reduce((sum, r) => sum + r.latency, 0) / successfulResults.length 
-      : 50; // Fallback average
-    
-    // Generate exchange-specific data with geographic and infrastructure factors
+      : 50; 
+
     return Object.values(EXCHANGES).map(exchange => {
-      // Base latency influenced by free API measurements
       let baseLatency = avgLatency;
-      
-      // Add geographic distance factor
       baseLatency += this.getGeographicLatencyFactor(exchange.location);
-      
-      // Add cloud provider factor
       baseLatency += this.getCloudProviderLatencyFactor(exchange.cloud);
-      
-      // Add realistic variation
       const variation = (Math.random() - 0.5) * 20;
       const finalLatency = Math.max(1, Math.round(baseLatency + variation));
-      
-      // Calculate reliability based on successful API calls
       const reliability = successfulResults.length / freeApiResults.length;
       
       return {
@@ -125,38 +99,35 @@ class FreeApisService {
     });
   }
 
-  // Get latency factor based on geographic distance
   private getGeographicLatencyFactor(location: { lat: number; lng: number }): number {
-    // Simplified distance calculation
     const baseDistance = Math.sqrt(location.lat ** 2 + location.lng ** 2);
-    return Math.min(30, baseDistance * 0.15); // Max 30ms additional latency
+    return Math.min(30, baseDistance * 0.15); 
   }
 
-  // Get latency factor based on cloud provider
   private getCloudProviderLatencyFactor(cloud: string): number {
     const cloudFactors = {
-      'AWS': 0,      // Baseline
-      'GCP': 2,      // Slightly higher
-      'Azure': 3,    // Slightly higher
-      'DigitalOcean': 5, // Higher
-      'Vultr': 8,    // Higher
-      'Linode': 6,   // Higher
+      'AWS': 0,    
+      'GCP': 2,    
+      'Azure': 3,    
+      'DigitalOcean': 5, 
+      'Vultr': 8,    
+      'Linode': 6,   
     };
     
     return cloudFactors[cloud as keyof typeof cloudFactors] || 0;
   }
 
-  // Get public internet speed test data (simulated)
+
   async getInternetSpeedData(): Promise<{
     downloadSpeed: number;
     uploadSpeed: number;
     ping: number;
     timestamp: string;
   }> {
-    // Simulate internet speed test results
-    const basePing = 15 + Math.random() * 25; // 15-40ms
-    const downloadSpeed = 50 + Math.random() * 150; // 50-200 Mbps
-    const uploadSpeed = 10 + Math.random() * 50; // 10-60 Mbps
+
+    const basePing = 15 + Math.random() * 25; 
+    const downloadSpeed = 50 + Math.random() * 150;
+    const uploadSpeed = 10 + Math.random() * 50;
     
     return {
       downloadSpeed: Math.round(downloadSpeed),
@@ -166,7 +137,6 @@ class FreeApisService {
     };
   }
 
-  // Get global latency statistics (simulated)
   async getGlobalLatencyStats(): Promise<{
     averageLatency: number;
     minLatency: number;
@@ -185,7 +155,7 @@ class FreeApisService {
     
     const regionStats = regions.map(r => ({
       region: r.region,
-      averageLatency: 25 + Math.random() * 35, // 25-60ms
+      averageLatency: 25 + Math.random() * 35, 
       exchangeCount: r.exchanges.length,
     }));
     
@@ -203,6 +173,5 @@ class FreeApisService {
   }
 }
 
-// Export singleton instance
 export const freeApisService = new FreeApisService();
 export default freeApisService; 

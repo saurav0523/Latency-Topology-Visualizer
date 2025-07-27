@@ -7,7 +7,6 @@ export default function ThemeToggle() {
   const dispatch = useAppDispatch();
   const theme = useAppSelector(selectTheme);
 
-  // Initialize theme on mount
   useEffect(() => {
     if (typeof document !== 'undefined') {
       const savedTheme = localStorage.getItem('theme') || 'light';
@@ -19,8 +18,6 @@ export default function ThemeToggle() {
   const toggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light';
     dispatch(setTheme(newTheme));
-    
-    // Update document class for Tailwind CSS
     if (typeof document !== 'undefined') {
       document.documentElement.classList.toggle('dark', newTheme === 'dark');
       localStorage.setItem('theme', newTheme);

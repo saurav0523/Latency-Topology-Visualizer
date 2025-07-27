@@ -22,7 +22,6 @@ class RateLimiter {
     const state = this.limits.get(key);
 
     if (!state || now > state.resetTime) {
-      // Reset or create new state
       this.limits.set(key, {
         requests: 1,
         resetTime: now + this.config.windowMs,
@@ -49,8 +48,6 @@ class RateLimiter {
     return state?.resetTime || Date.now();
   }
 }
-
-// Cache utility for API responses
 class APICache {
   private cache: Map<string, { data: unknown; timestamp: number; ttl: number }> = new Map();
 
@@ -84,34 +81,29 @@ class APICache {
   }
 }
 
-// Export instances
 export const rateLimiter = new RateLimiter({
   maxRequests: 100,
-  windowMs: 60000, // 1 minute
+  windowMs: 60000, 
 });
 
 export const apiCache = new APICache();
 
-// Utility function to check rate limit and cache
 export const withRateLimitAndCache = async <T>(
   key: string,
   fn: () => Promise<T>,
   ttl: number = 30000
 ): Promise<T> => {
-  // Check rate limit
   if (!rateLimiter.isAllowed(key)) {
     throw new Error(`Rate limit exceeded for ${key}. Try again later.`);
   }
 
-  // Check cache first
   const cached = apiCache.get(key);
   if (cached) {
-    console.log(`📦 Cache hit for ${key}`);
+    console.log(`Cache hit for ${key}`);
     return cached as T;
   }
 
-  // Execute function and cache result
-  console.log(`🚀 Executing ${key}`);
+  console.log(`Executing ${key}`);
   const result = await fn();
   apiCache.set(key, result, ttl);
   

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -13,8 +14,7 @@ export default function TestApiPage() {
     const results: any = {};
 
     try {
-      // Test 1: Token verification
-      console.log('🧪 Testing token verification...');
+      console.log('Testing token verification...');
       try {
         const tokenResult = await cloudflareApiService.verifyToken();
         results.tokenVerification = { success: true, data: tokenResult };
@@ -22,8 +22,8 @@ export default function TestApiPage() {
         results.tokenVerification = { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
       }
 
-      // Test 2: Simulated latency data
-      console.log('🧪 Testing simulated latency data...');
+
+      console.log('Testing simulated latency data...');
       try {
         const simulatedData = cloudflareApiService.generateSimulatedLatencyData();
         results.simulatedData = { success: true, count: simulatedData.length, sample: simulatedData[0] };
@@ -31,8 +31,7 @@ export default function TestApiPage() {
         results.simulatedData = { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
       }
 
-      // Test 3: Free API latency measurement
-      console.log('🧪 Testing free API latency...');
+      console.log('Testing free API latency...');
       try {
         const freeApiResults = await freeApisService.measureFreeApiLatency();
         results.freeApiLatency = { success: true, count: freeApiResults.length, sample: freeApiResults[0] };
@@ -40,8 +39,8 @@ export default function TestApiPage() {
         results.freeApiLatency = { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
       }
 
-      // Test 4: Alternative latency data
-      console.log('🧪 Testing alternative latency data...');
+
+      console.log('Testing alternative latency data...');
       try {
         const alternativeData = await freeApisService.generateAlternativeLatencyData();
         results.alternativeData = { success: true, count: alternativeData.length, sample: alternativeData[0] };
@@ -50,7 +49,7 @@ export default function TestApiPage() {
       }
 
     } catch (error) {
-      console.error('❌ Test suite error:', error);
+      console.error('Test suite error:', error);
       results.generalError = error instanceof Error ? error.message : 'Unknown error';
     }
 
@@ -79,7 +78,6 @@ export default function TestApiPage() {
         )}
 
         <div className="space-y-6">
-          {/* Token Verification Test */}
           <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-xl border border-gray-200/50 dark:border-gray-700/50 shadow-sm p-6">
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
               Token Verification Test
@@ -117,7 +115,6 @@ export default function TestApiPage() {
             )}
           </div>
 
-          {/* Simulated Data Test */}
           <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-xl border border-gray-200/50 dark:border-gray-700/50 shadow-sm p-6">
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
               Simulated Latency Data Test
@@ -165,7 +162,6 @@ export default function TestApiPage() {
             )}
           </div>
 
-          {/* Free API Latency Test */}
           <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-xl border border-gray-200/50 dark:border-gray-700/50 shadow-sm p-6">
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
               Free API Latency Test
@@ -213,7 +209,6 @@ export default function TestApiPage() {
             )}
           </div>
 
-          {/* Alternative Data Test */}
           <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-xl border border-gray-200/50 dark:border-gray-700/50 shadow-sm p-6">
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
               Alternative Latency Data Test
@@ -261,7 +256,6 @@ export default function TestApiPage() {
             )}
           </div>
 
-          {/* General Error */}
           {testResults.generalError && (
             <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
               <h3 className="text-lg font-semibold text-red-800 dark:text-red-200 mb-2">
@@ -273,7 +267,6 @@ export default function TestApiPage() {
             </div>
           )}
 
-          {/* Retry Button */}
           <div className="flex justify-center">
             <button
               onClick={runTests}

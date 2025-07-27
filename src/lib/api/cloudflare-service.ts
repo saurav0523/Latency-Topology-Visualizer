@@ -2,7 +2,7 @@ import axiosInstance from './axios-instance';
 import { API_ENDPOINTS } from './endpoints';
 import { EXCHANGES } from '../constants';
 
-// Types
+
 export interface CloudflareResponse<T = Record<string, unknown>> {
   success: boolean;
   result: T;
@@ -57,14 +57,13 @@ export interface RequestsDataResponse {
   }>;
 }
 
-// API Service Class
+
 class CloudflareApiService {
   private cache: Map<string, { data: unknown; timestamp: number; ttl: number }> = new Map();
   private cacheEnabled: boolean = true;
   private cacheHits: number = 0;
   private cacheMisses: number = 0;
 
-  // Cache management methods
   private getCacheKey(endpoint: string, params?: Record<string, unknown>): string {
     const paramString = params ? JSON.stringify(params) : '';
     return `${endpoint}${paramString}`;
@@ -87,7 +86,7 @@ class CloudflareApiService {
     }
 
     this.cacheHits++;
-    console.log(`📦 Cache hit for ${key}`);
+    console.log(`Cache hit for ${key}`);
     return item.data as T;
   }
 
@@ -99,7 +98,7 @@ class CloudflareApiService {
       timestamp: Date.now(),
       ttl,
     });
-    console.log(`💾 Cached data for ${key} (TTL: ${ttl}ms)`);
+    console.log(`Cached data for ${key} (TTL: ${ttl}ms)`);
   }
 
   public setCacheEnabled(enabled: boolean): void {
@@ -108,9 +107,9 @@ class CloudflareApiService {
       this.cache.clear();
       this.cacheHits = 0;
       this.cacheMisses = 0;
-      console.log('🗑️ Cache disabled and cleared');
+      console.log('Cache disabled and cleared');
     } else {
-      console.log('✅ Cache enabled');
+      console.log('Cache enabled');
     }
   }
 
@@ -125,20 +124,17 @@ class CloudflareApiService {
     };
   }
 
-  // Verify API token
   async verifyToken(): Promise<TokenVerificationResponse> {
     const cacheKey = this.getCacheKey('verify-token');
-    
-    // Check cache first
+ 
     const cached = this.getFromCache<TokenVerificationResponse>(cacheKey);
     if (cached) {
       return cached;
     }
 
     try {
-      console.log('🔍 Verifying Cloudflare API token via proxy...');
-      
-      // Use Next.js API proxy to bypass CORS
+      console.log('Verifying Cloudflare API token via proxy...');
+
       const response = await fetch('/api/cloudflare?endpoint=verify', {
         method: 'GET',
         headers: {
@@ -153,10 +149,8 @@ class CloudflareApiService {
       const data = await response.json();
       
       if (data.success) {
-        console.log('✅ Token verification successful');
         const result = data.result;
-        
-        // Cache the result for 5 minutes (300000ms)
+  
         this.setCache(cacheKey, result, 300000);
         
         return result;
@@ -166,7 +160,7 @@ class CloudflareApiService {
       }
     } catch (error) {
       if (error instanceof Error) {
-        console.error('❌ Token verification error:', error.message);
+        console.error('Token verification error:', error.message);
         
         if (error.message.includes('401') || error.message.includes('403')) {
           throw new Error('Invalid API token. Please check your Cloudflare token.');
@@ -174,7 +168,7 @@ class CloudflareApiService {
         
         throw new Error(`Token verification failed: ${error.message}`);
       } else {
-        console.error('❌ Token verification error:', error);
+        console.error('Token verification error:', error);
         throw new Error('Token verification failed: Unknown error');
       }
     }

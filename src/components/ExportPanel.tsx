@@ -17,7 +17,6 @@ export default function ExportPanel({ isOpen, onClose, data = [] }: ExportPanelP
   const [isExporting, setIsExporting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Clear error when data changes
   React.useEffect(() => {
     if (data && data.length > 0) {
       setError(null);
@@ -31,12 +30,9 @@ export default function ExportPanel({ isOpen, onClose, data = [] }: ExportPanelP
     setError(null);
     
     try {
-      // Validate data before export
       if (!data || data.length === 0) {
         throw new Error('No data available for export');
       }
-
-      // Validate data structure
       const hasValidData = data.every(item => 
         item.exchange && 
         typeof item.latency === 'number' && 
@@ -51,7 +47,7 @@ export default function ExportPanel({ isOpen, onClose, data = [] }: ExportPanelP
         throw new Error('Data structure is invalid. Some required fields are missing.');
       }
 
-      console.log('📊 Starting export:', { format: exportFormat, type: exportType, dataLength: data.length });
+      console.log('Starting export:', { format: exportFormat, type: exportType, dataLength: data.length });
       
       switch (exportFormat) {
         case 'json':
@@ -67,12 +63,11 @@ export default function ExportPanel({ isOpen, onClose, data = [] }: ExportPanelP
           throw new Error(`Unsupported export format: ${exportFormat}`);
       }
       
-      console.log('✅ Export completed successfully');
+      console.log('Export completed successfully');
     } catch (error) {
-      console.error('❌ Export failed:', error);
+      console.error('Export failed:', error);
       const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
       setError(errorMessage);
-      // Show error to user
       alert(`Export failed: ${errorMessage}`);
     } finally {
       setIsExporting(false);
@@ -119,7 +114,7 @@ export default function ExportPanel({ isOpen, onClose, data = [] }: ExportPanelP
     const csvContent = [
       headers.join(','),
       ...data.map(item => [
-        `"${item.exchange}"`, // Escape quotes in CSV
+        `"${item.exchange}"`, 
         item.latency,
         `"${item.cloud}"`,
         `"${item.region}"`,
@@ -143,8 +138,6 @@ export default function ExportPanel({ isOpen, onClose, data = [] }: ExportPanelP
     if (!data || data.length === 0) {
       throw new Error('No data to export');
     }
-
-    // For PDF export, we'll create a simple HTML report and use browser print
     const reportWindow = window.open('', '_blank');
     if (!reportWindow) {
       throw new Error('Failed to open print window. Please allow popups for this site.');
@@ -228,7 +221,6 @@ export default function ExportPanel({ isOpen, onClose, data = [] }: ExportPanelP
     reportWindow.document.write(reportHTML);
     reportWindow.document.close();
     
-    // Wait for content to load then print
     setTimeout(() => {
       reportWindow.print();
       reportWindow.close();
@@ -248,8 +240,6 @@ export default function ExportPanel({ isOpen, onClose, data = [] }: ExportPanelP
   };
 
   const stats = getLatencyStats();
-  
-  // Determine if export button should be disabled
   const isExportDisabled = isExporting || !data || data.length === 0;
   const exportButtonText = isExporting 
     ? 'Exporting...' 
@@ -260,7 +250,6 @@ export default function ExportPanel({ isOpen, onClose, data = [] }: ExportPanelP
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
-        {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
             Export Latency Data
@@ -274,10 +263,7 @@ export default function ExportPanel({ isOpen, onClose, data = [] }: ExportPanelP
             </svg>
           </button>
         </div>
-
-        {/* Content */}
         <div className="p-6 space-y-6">
-          {/* Error Status */}
           {error && (
             <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
               <div className="flex items-center">
@@ -291,7 +277,6 @@ export default function ExportPanel({ isOpen, onClose, data = [] }: ExportPanelP
             </div>
           )}
 
-          {/* Data Status */}
           {(!data || data.length === 0) && !error && (
             <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
               <div className="flex items-center">
@@ -305,7 +290,6 @@ export default function ExportPanel({ isOpen, onClose, data = [] }: ExportPanelP
             </div>
           )}
 
-          {/* Export Format */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
               Export Format
@@ -333,7 +317,6 @@ export default function ExportPanel({ isOpen, onClose, data = [] }: ExportPanelP
             </div>
           </div>
 
-          {/* Export Type */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
               Data Selection
@@ -362,7 +345,6 @@ export default function ExportPanel({ isOpen, onClose, data = [] }: ExportPanelP
             </div>
           </div>
 
-          {/* Options */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
               Export Options
@@ -391,7 +373,6 @@ export default function ExportPanel({ isOpen, onClose, data = [] }: ExportPanelP
             </div>
           </div>
 
-          {/* Preview */}
           {stats && (
             <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
               <h3 className="text-sm font-medium text-gray-900 dark:text-white mb-3">
@@ -419,7 +400,6 @@ export default function ExportPanel({ isOpen, onClose, data = [] }: ExportPanelP
           )}
         </div>
 
-        {/* Footer */}
         <div className="flex items-center justify-end space-x-3 p-6 border-t border-gray-200 dark:border-gray-700">
           <button
             onClick={onClose}

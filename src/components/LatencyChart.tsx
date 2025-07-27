@@ -25,10 +25,8 @@ interface LatencyChartProps {
 }
 
 export default function LatencyChart({ data, exchange, chartType }: LatencyChartProps) {
-  // Process data for better visualization
   const processedData = useMemo(() => {
     if (!data || data.length === 0) {
-      // Generate sample data if no data available
       const now = Date.now();
       return Array.from({ length: 24 }, (_, i) => ({
         time: new Date(now - (24 - i) * 60 * 60 * 1000).toLocaleTimeString([], { 
@@ -40,8 +38,6 @@ export default function LatencyChart({ data, exchange, chartType }: LatencyChart
     }
     return data;
   }, [data]);
-
-  // Calculate statistics
   const stats = useMemo(() => {
     if (!processedData || processedData.length === 0) return null;
     
@@ -53,7 +49,6 @@ export default function LatencyChart({ data, exchange, chartType }: LatencyChart
     return { min, max, avg };
   }, [processedData]);
 
-  // Custom tooltip
   interface CustomTooltipProps {
     active?: boolean;
     payload?: Array<{ value: number }>;
@@ -74,14 +69,12 @@ export default function LatencyChart({ data, exchange, chartType }: LatencyChart
     return null;
   };
 
-  // Get color based on latency value
   const getLatencyColor = (latency: number) => {
-    if (latency < 30) return '#22c55e'; // Green for low latency
-    if (latency < 60) return '#eab308'; // Yellow for medium latency
-    return '#ef4444'; // Red for high latency
+    if (latency < 30) return '#22c55e';
+    if (latency < 60) return '#eab308';
+    return '#ef4444';
   };
 
-  // Render chart based on type
   const renderChart = () => {
     const commonProps = {
       data: processedData,
@@ -203,7 +196,6 @@ export default function LatencyChart({ data, exchange, chartType }: LatencyChart
 
   return (
     <div className="w-full h-full space-y-4">
-      {/* Chart Header */}
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
@@ -213,8 +205,7 @@ export default function LatencyChart({ data, exchange, chartType }: LatencyChart
             Historical performance data over time
           </p>
         </div>
-        
-        {/* Statistics */}
+
         {stats && (
           <div className="flex space-x-4 text-sm">
             <div className="text-center">
@@ -238,15 +229,11 @@ export default function LatencyChart({ data, exchange, chartType }: LatencyChart
           </div>
         )}
       </div>
-
-      {/* Chart */}
       <div className="w-full h-64">
         <ResponsiveContainer width="100%" height="100%">
           {renderChart()}
         </ResponsiveContainer>
       </div>
-
-      {/* Chart Legend */}
       <div className="flex items-center justify-center space-x-6 text-sm">
         <div className="flex items-center space-x-2">
           <div className="w-3 h-3 bg-green-500 rounded-full"></div>
@@ -262,7 +249,6 @@ export default function LatencyChart({ data, exchange, chartType }: LatencyChart
         </div>
       </div>
 
-      {/* Data Summary */}
       {processedData.length > 0 && (
         <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
           <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-2">

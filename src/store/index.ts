@@ -12,7 +12,6 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        // Ignore these action types for serialization checks
         ignoredActions: [
           'latency/setLastUpdated',
           'ui/setLastUpdated',
@@ -24,7 +23,6 @@ export const store = configureStore({
           'latency/fetchLatencyData/fulfilled',
           'latency/fetchHistoricalData/fulfilled'
         ],
-        // Ignore these field paths in all actions
         ignoredActionPaths: [
           'payload.timestamp',
           'payload.lastUpdated',
@@ -33,7 +31,6 @@ export const store = configureStore({
           'payload.lastTokenCheck',
           'payload.timestamp'
         ],
-        // Ignore these paths in the state
         ignoredPaths: [
           'latency.lastUpdated',
           'ui.lastUpdated',
@@ -48,6 +45,5 @@ export const store = configureStore({
   devTools: process.env.NODE_ENV !== 'production',
 });
 
-// Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch; 

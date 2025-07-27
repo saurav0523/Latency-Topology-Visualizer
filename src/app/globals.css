@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Basic styles */
+
 html, body {
   margin: 0;
   padding: 0;
@@ -10,7 +10,7 @@ html, body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-/* Custom animations */
+
 @keyframes pulse-fast {
   0%, 100% {
     opacity: 1;
@@ -70,8 +70,6 @@ html, body {
     transform: translateX(0);
   }
 }
-
-/* Custom utility classes */
 .animate-pulse-fast {
   animation: pulse-fast 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
@@ -98,7 +96,6 @@ html, body {
   animation: slideInRight 0.5s ease-out;
 }
 
-/* Performance optimizations */
 .gpu-accelerated {
   transform: translateZ(0);
   will-change: transform;
@@ -109,12 +106,11 @@ html, body {
   -webkit-backdrop-filter: blur(8px);
 }
 
-/* Smooth scrolling */
+
 html {
   scroll-behavior: smooth;
 }
 
-/* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -134,7 +130,6 @@ html {
   background: rgba(0, 0, 0, 0.5);
 }
 
-/* Dark mode scrollbar */
 .dark ::-webkit-scrollbar-track {
   background: rgba(255, 255, 255, 0.1);
 }
@@ -147,7 +142,6 @@ html {
   background: rgba(255, 255, 255, 0.5);
 }
 
-/* Loading skeleton enhancements */
 .skeleton-shimmer {
   background: linear-gradient(90deg, 
     rgba(255, 255, 255, 0.1) 25%, 
@@ -168,7 +162,6 @@ html {
   animation: shimmer 2s linear infinite;
 }
 
-/* Performance monitoring styles */
 .performance-indicator {
   font-family: 'Courier New', monospace;
   font-size: 11px;
@@ -187,7 +180,6 @@ html {
   color: #ef4444;
 }
 
-/* WebGL canvas optimizations */
 .webgl-canvas {
   touch-action: none;
   -webkit-touch-callout: none;
@@ -198,7 +190,6 @@ html {
   user-select: none;
 }
 
-/* Mobile optimizations */
 @media (max-width: 768px) {
   .mobile-optimized {
     transform: translateZ(0);
@@ -210,7 +201,6 @@ html {
   }
 }
 
-/* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -229,7 +219,6 @@ html {
   }
 }
 
-/* High contrast mode support */
 @media (prefers-contrast: high) {
   .bg-white\/70 {
     background-color: rgba(255, 255, 255, 0.95) !important;
@@ -248,7 +237,6 @@ html {
   }
 }
 
-/* Print styles */
 @media print {
   .no-print {
     display: none !important;
@@ -263,19 +251,16 @@ html {
   }
 }
 
-/* Focus styles for accessibility */
 .focus-visible:focus {
   outline: 2px solid #3b82f6;
   outline-offset: 2px;
 }
 
-/* Custom focus ring for buttons */
 .btn-focus:focus {
   outline: none;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
 }
 
-/* Loading states */
 .loading-overlay {
   position: relative;
 }
@@ -299,14 +284,12 @@ html {
   background: rgba(0, 0, 0, 0.8);
 }
 
-/* Progress bar animations */
 .progress-bar {
   background: linear-gradient(90deg, #3b82f6, #8b5cf6, #3b82f6);
   background-size: 200% 100%;
   animation: shimmer 2s linear infinite;
 }
 
-/* Chart loading animations */
 .chart-loading {
   background: linear-gradient(45deg, 
     rgba(59, 130, 246, 0.1) 25%, 
@@ -321,7 +304,6 @@ html {
   animation: shimmer 1s linear infinite;
 }
 
-/* Performance monitoring panel */
 .performance-panel {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -332,12 +314,10 @@ html {
   border-color: rgba(255, 255, 255, 0.05);
 }
 
-/* Smooth transitions for theme switching */
 * {
   transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 
-/* Optimize for high DPI displays */
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   .high-dpi-optimized {
     image-rendering: -webkit-optimize-contrast;

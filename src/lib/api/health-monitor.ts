@@ -34,10 +34,8 @@ class APIHealthMonitor {
       errorCount: 0,
       lastCheck: now,
     };
-
-    // Update metrics
     existing.lastCheck = now;
-    existing.responseTime = (existing.responseTime + responseTime) / 2; // Rolling average
+    existing.responseTime = (existing.responseTime + responseTime) / 2; 
 
     if (success) {
       existing.successCount++;
@@ -46,12 +44,9 @@ class APIHealthMonitor {
       existing.errorCount++;
       existing.lastError = now;
     }
-
-    // Calculate error rate
     const totalRequests = existing.successCount + existing.errorCount;
     existing.errorRate = totalRequests > 0 ? (existing.errorCount / totalRequests) * 100 : 0;
 
-    // Calculate uptime
     const totalTime = Date.now() - this.startTime;
     const downtime = existing.lastError ? Date.now() - existing.lastError.getTime() : 0;
     existing.uptime = totalTime > 0 ? ((totalTime - downtime) / totalTime) * 100 : 100;
@@ -68,7 +63,6 @@ class APIHealthMonitor {
       : 0;
     const successRate = totalRequests > 0 ? ((totalRequests - totalErrors) / totalRequests) * 100 : 100;
 
-    // Determine overall health
     let overallHealth: HealthReport['overallHealth'] = 'excellent';
     if (successRate < 95) overallHealth = 'good';
     if (successRate < 90) overallHealth = 'poor';
@@ -98,16 +92,16 @@ class APIHealthMonitor {
     const report = this.getHealthReport();
 
     if (report.successRate < 90) {
-      alerts.push(`⚠️ Low success rate: ${report.successRate.toFixed(1)}%`);
+      alerts.push(`Low success rate: ${report.successRate.toFixed(1)}%`);
     }
 
     if (report.averageResponseTime > 5000) {
-      alerts.push(`🐌 Slow response time: ${report.averageResponseTime.toFixed(0)}ms`);
+      alerts.push(`Slow response time: ${report.averageResponseTime.toFixed(0)}ms`);
     }
 
     report.endpoints.forEach(endpoint => {
       if (endpoint.errorRate > 20) {
-        alerts.push(`❌ High error rate for ${endpoint.endpoint}: ${endpoint.errorRate.toFixed(1)}%`);
+        alerts.push(`High error rate for ${endpoint.endpoint}: ${endpoint.errorRate.toFixed(1)}%`);
       }
     });
 
@@ -115,10 +109,9 @@ class APIHealthMonitor {
   }
 }
 
-// Export singleton instance
+
 export const healthMonitor = new APIHealthMonitor();
 
-// Utility function to monitor API calls
 export const withHealthMonitoring = async <T>(
   endpoint: string,
   fn: () => Promise<T>
